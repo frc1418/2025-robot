@@ -184,21 +184,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void drive(double x, double y, double rot) {
         if (tempSlowMode) {
-             if (permSlowMode) {
-                x*=0.75;
-                y*=0.75;
-                rot*=0.75;
-             }
-             else {
-                x *= 0.5;
-                y *= 0.5;
-                rot *= 0.5;
-             }
+            x *= 0.5;
+            y *= 0.5;
+            rot *= 0.5;
         }
         if (permSlowMode) {
-            x *= 0.8;
-            y *= 0.8;
-            rot *= 0.8;
+            x *= 0.75;
+            y *= 0.75;
+            rot *= 0.75;
         }
 
         if (limitDrive) {

@@ -64,11 +64,33 @@ public final class Constants {
     );
   }
 
+  public final static class ElevatorConstants {
+    public final static int ELEVATOR_MOTOR_1_ID = 9;
+    public final static int ELEVATOR_MOTOR_2_ID = 10;
+  }
+
+  public final static class PivotConstants {
+    public final static int PIVOT_MOTOR_ID = 11;
+  }
+
+  public final static class IntakeConstants {
+    public final static int INTAKE_MOTOR_ID = 12;
+  }
+
+  public final static class ClimberConstants {
+    public final static int PNEUMATICS_HUB_ID = 23;
+    
+    public final static int LEFT_SOLENOID_REVERSE = 3;
+    public final static int LEFT_SOLENOID_FORWARD = 2;
+
+    public final static int RIGHT_SOLENOID_REVERSE = 1;
+    public final static int RIGHT_SOLENOID_FORWARD = 0;  }
+
   public final static class DriverConstants {
     public final static double maxAccel = 1.5;
-    public final static double maxSpeedMetersPerSecond = 4.8*1.25;
-    public final static double maxAngularAccel = 0.075*1.25;
-    public final static double maxAngularSpeed = 2*Math.PI*1.25;
+    public final static double maxSpeedMetersPerSecond = 4.8;
+    public final static double maxAngularAccel = 0.075;
+    public final static double maxAngularSpeed = 2*Math.PI;
     public final static double maxCorrectiveAngularSpeed = Math.PI;
     public final static double correctiveFactor = 0.16;
     public final static double baseCorrector = 0.04;
