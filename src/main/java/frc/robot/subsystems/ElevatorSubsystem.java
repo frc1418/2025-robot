@@ -31,8 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
 
-  private double encoderScalar = 4.43
-  ;
+  private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
   private double lastHeight;
   private double initialHeight;
   private double heightValue;
@@ -43,7 +42,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorEncoder = motor1.getAbsoluteEncoder();
     lastHeight = elevatorEncoder.getPosition();
-    initialHeight = (elevatorEncoder.getPosition()+0.037)/encoderScalar;
+    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.HEIGHT_BUMP)/encoderScalar;
   }
 
   public Command holdElevator() {

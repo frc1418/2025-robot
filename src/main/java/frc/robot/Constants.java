@@ -67,6 +67,9 @@ public final class Constants {
   public final static class ElevatorConstants {
     public final static int ELEVATOR_MOTOR_1_ID = 9;
     public final static int ELEVATOR_MOTOR_2_ID = 10;
+
+    public final static double ENCODER_SCALAR = 4.43;
+    public final static double HEIGHT_BUMP = 0.037;
   }
 
   public final static class IntakeConstants {
