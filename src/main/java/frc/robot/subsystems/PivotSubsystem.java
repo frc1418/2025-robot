@@ -33,12 +33,12 @@ public class PivotSubsystem extends SubsystemBase {
   private final MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(0);
 
   public PivotSubsystem() {
-    pivotMotor.setPosition(0);
+    pivotMotor.setPosition(PivotConstants.pivotOffsetFromStart);
 
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     FeedbackConfigs feedbackConfigs = talonConfig.Feedback;
-    feedbackConfigs.SensorToMechanismRatio = PivotConstants.pivotRotationsToRadians;
+    feedbackConfigs.SensorToMechanismRatio = PivotConstants.pivotRotationsToArmRotations;
     MotionMagicConfigs motionMagicConfigs = talonConfig.MotionMagic;
     motionMagicConfigs
       .withMotionMagicCruiseVelocity(RotationsPerSecond.of(0.1)) // 1 (mechanism) rotations per 10 second cruise

@@ -79,9 +79,12 @@ public final class Constants {
   public final static class PivotConstants {
     public static final int TALON_MOTOR_ID = 1;
 
-    // Conversion factor from falcon motor rotations to rotation of arm
-    // 1 is the gear ratio between the motor and the arm
-    public static final double pivotRotationsToRadians = 2*Math.PI/1;
+    // Conversion factor from falcon motor rotations to radians of arm rotation
+    // -15.48633 is roughly the gear ratio between the motor and the arm
+    public static final double pivotRotationsToArmRotations = -15.48633;
+    // Starting point of arm when resting on bumpers
+    public static final double pivotOffsetFromStart = -0.0727
+    ;
   }
   public final static class PneumaticsConstants {
     public final static int PNEUMATICS_HUB_ID = 21;
