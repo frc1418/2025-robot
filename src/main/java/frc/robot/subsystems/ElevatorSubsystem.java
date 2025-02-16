@@ -11,6 +11,8 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -30,6 +32,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax motor2 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
+  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.5);
 
   private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
   private double lastHeight;
@@ -67,6 +70,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void moveElevator(double speed) {
+    speed = speedLimiter.calculate(speed);
     motor1.set(speed);
     motor2.set(speed);
   }
