@@ -10,6 +10,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,15 +20,16 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
 
   private final SparkFlex intakeMotor = new SparkFlex(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
-  public final SparkFlexConfig motorConfig = new SparkFlexConfig();
+  private final SparkFlexConfig motorConfig = new SparkFlexConfig();
+
+  private DigitalInput topLimitSwitch = new DigitalInput(0);
+
+  private boolean hasCoral = true;
+
 
   public IntakeSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);
     intakeMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-
-  public void setIntake(double speed) {
-    intakeMotor.set(speed);
   }
 
   public Command holdIntake() {
@@ -50,9 +53,21 @@ public class IntakeSubsystem extends SubsystemBase {
       }, this);
   }
 
+  public void setIntake(double speed) {
+    intakeMotor.set(speed);
+  }
+
+  public Boolean getHasCoral() {
+    return hasCoral;
+  }
+
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (topLimitSwitch.get())
+      hasCoral = true;
+    else
+      hasCoral = false;
   }
 
   @Override
