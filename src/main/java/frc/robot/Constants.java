@@ -70,6 +70,10 @@ public final class Constants {
 
     public final static double ENCODER_SCALAR = 4.43;
     public final static double HEIGHT_BUMP = 0.037;
+
+    public final static double kP = 0.0001;
+    public final static double kI = 0;
+    public final static double kD = 0;
   }
 
   public final static class IntakeConstants {
@@ -106,7 +110,7 @@ public final class Constants {
     public final static double baseCorrector = 0.04;
   }
 
-  public final static class EncoderConstants {
+  public final static class WheelConstants {
     /*
      * Conversion factor from motor rotations to meters
      * 1.5 is the wheel radius in inches

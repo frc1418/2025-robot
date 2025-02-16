@@ -12,11 +12,13 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -32,6 +34,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax motor2 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
+
+  private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
   private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.5);
 
   private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
@@ -60,24 +64,34 @@ public class ElevatorSubsystem extends SubsystemBase {
       }, this);
   }
 
-  public Command moveElevatorUp() {
+  public Command runElevator(double speed) {
     return new RunCommand(
       () -> {
-        moveElevator(0.3);
+        moveElevator(speed);
       }, this);
   }
 
-  public Command moveElevatorDown() {
+  public Command moveElevatorToHeight(double height) {
     return new RunCommand(
       () -> {
-        moveElevator(0);
-      }, this);
+        setElevatorLocation(height);
+      }, this).andThen(
+      Commands.runOnce(
+        () -> {
+          System.out.println("resetting elevator");
+          elevatorController.reset();
+        }, this));
   }
 
   public void moveElevator(double speed) {
     speed = speedLimiter.calculate(speed);
     motor1.set(speed);
     motor2.set(speed);
+  }
+
+  public void setElevatorLocation(double height) {
+    double speed = elevatorController.calculate(heightValue, height);
+    moveElevator(speed);
   }
 
   @Override
