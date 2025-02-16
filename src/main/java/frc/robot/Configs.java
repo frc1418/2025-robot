@@ -22,7 +22,7 @@ public final class Configs {
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
             angleConfig
-                .idleMode(IdleMode.kBrake)
+                .idleMode(IdleMode.kCoast)
                 .smartCurrentLimit(20);
             angleConfig.absoluteEncoder
                 .inverted(true)
