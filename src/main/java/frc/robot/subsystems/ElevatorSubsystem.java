@@ -51,7 +51,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   public Command holdElevator() {
     return new RunCommand(
       () -> {
-        moveElevator(0.1);
+        if (heightValue > 0.05) {
+          moveElevator(0.1);
+        }
+        else {
+          moveElevator(0);
+        }
       }, this);
   }
 
