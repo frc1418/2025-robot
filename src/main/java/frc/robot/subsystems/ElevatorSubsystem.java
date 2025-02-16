@@ -7,26 +7,43 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
+  private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
+  private final NetworkTable table = ntInstance.getTable("/components/elevator");
+
+  private final NetworkTableEntry ntElevatorHeight = table.getEntry("elevatorHeight");
+  private final NetworkTableEntry ntElevatorSpeed = table.getEntry("elevatorSpeed");
+
   private final SparkMax motor1 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
   private final SparkMax motor2 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
-  public final SparkMaxConfig motorConfig = new SparkMaxConfig();
+  private final SparkMaxConfig motorConfig = new SparkMaxConfig();
+  private final AbsoluteEncoder elevatorEncoder;
 
+  private double encoderScalar = 4.43
+  ;
+  private double lastHeight;
+  private double initialHeight;
+  private double heightValue;
 
   public ElevatorSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);
     motor1.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    elevatorEncoder = motor1.getAbsoluteEncoder();
+    lastHeight = elevatorEncoder.getPosition();
+    initialHeight = (elevatorEncoder.getPosition()+0.037)/encoderScalar;
   }
 
   public Command holdElevator() {
@@ -57,7 +74,19 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    double rawPosition = elevatorEncoder.getPosition();
+    double deltaHeight = rawPosition - lastHeight;
+    while (deltaHeight < -0.5) {
+      deltaHeight += 1;
+    }
+    while (deltaHeight > 0.5) {
+      deltaHeight -= 1;
+    }
+    lastHeight += deltaHeight;
+    double normalizedHeight = lastHeight/encoderScalar;
+    heightValue = normalizedHeight - initialHeight;
+    ntElevatorHeight.setDouble(heightValue);
+    ntElevatorSpeed.setDouble(elevatorEncoder.getVelocity());
   }
 
   @Override

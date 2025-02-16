@@ -7,48 +7,46 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
+import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.PivotConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private final SparkMax pivotMotor = new SparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
-  public final SparkMaxConfig motorConfig = new SparkMaxConfig();
+  private final SparkFlex intakeMotor = new SparkFlex(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
+  public final SparkFlexConfig motorConfig = new SparkFlexConfig();
 
   public IntakeSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);
-    pivotMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    intakeMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void setIntake(double speed) {
-    pivotMotor.set(speed);
+    intakeMotor.set(speed);
   }
 
   public Command holdIntake() {
     return new RunCommand(
       () -> {
-        setIntake(0.1);
-      }, this);
-  }
-
-  public Command intakeIn() {
-    return new RunCommand(
-      () -> {
-        setIntake(0.3);
+        setIntake(0.05);
       }, this);
   }
 
   public Command intakeOut() {
     return new RunCommand(
       () -> {
-        setIntake(-0.3);
+        setIntake(-0.25);
+      }, this);
+  }
+
+  public Command intakeIn() {
+    return new RunCommand(
+      () -> {
+        setIntake(0.25);
       }, this);
   }
 

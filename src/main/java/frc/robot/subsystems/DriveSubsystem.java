@@ -118,9 +118,9 @@ public class DriveSubsystem extends SubsystemBase {
     private Optional<Alliance> ally;
 
     private boolean fieldCentric = true;
-    private boolean tempSlowMode = false;
-    private boolean permSlowMode = true;
     private boolean limitDrive = true;
+    private boolean tempSlowMode = false;
+    private boolean permSlowMode = false;
 
     RobotConfig config;
 
@@ -329,8 +329,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     public Command toggleFastMode() {
         return Commands.runOnce(() -> {
-            limitDrive = !limitDrive;
             permSlowMode = !permSlowMode;
+        });
+    }
+
+    public Command toggleLimitDrive() {
+        return Commands.runOnce(() -> {
+            limitDrive = !limitDrive;
             limitX.reset(0);
             limitY.reset(0);
         });

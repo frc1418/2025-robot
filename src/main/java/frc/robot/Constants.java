@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
   public final static class DrivetrainConstants{
 
-    public static final double wheelPos = 0.2978;
+    public static final double wheelPos = 0.33655;
 
     public static final double DRIFT_DEADBAND = 0.15;
     public static final double ROTATION_DEADBAND = 0.03;
@@ -69,22 +69,26 @@ public final class Constants {
     public final static int ELEVATOR_MOTOR_2_ID = 10;
   }
 
-  public final static class PivotConstants {
-    public final static int PIVOT_MOTOR_ID = 11;
-  }
-
   public final static class IntakeConstants {
-    public final static int INTAKE_MOTOR_ID = 12;
+    public static final int INTAKE_MOTOR_ID = 11;
   }
 
-  public final static class ClimberConstants {
-    public final static int PNEUMATICS_HUB_ID = 23;
-    
-    public final static int LEFT_SOLENOID_REVERSE = 3;
-    public final static int LEFT_SOLENOID_FORWARD = 2;
+  public final static class PivotConstants {
+    public static final int TALON_MOTOR_ID = 1;
 
-    public final static int RIGHT_SOLENOID_REVERSE = 1;
-    public final static int RIGHT_SOLENOID_FORWARD = 0;  }
+    // Conversion factor from falcon motor rotations to rotation of arm
+    // 1 is the gear ratio between the motor and the arm
+    public static final double pivotRotationsToRadians = 2*Math.PI/1;
+  }
+  public final static class PneumaticsConstants {
+    public final static int PNEUMATICS_HUB_ID = 21;
+    
+    public final static int CLIMB_SOLENOID_REVERSE = 0;
+    public final static int CLIMB_SOLENOID_FORWARD = 1;  
+
+    public final static int ATTACH_SOLENOID_REVERSE = 2;
+    public final static int ATTACH_SOLENOID_FORWARD = 3;
+  }
 
   public final static class DriverConstants {
     public final static double maxAccel = 1.5;
