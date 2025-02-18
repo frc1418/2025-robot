@@ -18,7 +18,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -36,7 +35,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final AbsoluteEncoder elevatorEncoder;
 
   private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
-  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.75);
 
   private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
   private double lastHeight;
@@ -55,8 +54,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   public Command holdElevator() {
     return new RunCommand(
       () -> {
-        if (heightValue > 0.05) {
-          moveElevator(0.1);
+        if (heightValue > 0.03) {
+          moveElevator(ElevatorConstants.kG);
         }
         else {
           moveElevator(0);
@@ -75,12 +74,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     return new RunCommand(
       () -> {
         setElevatorLocation(height);
-      }, this).andThen(
-      Commands.runOnce(
-        () -> {
-          System.out.println("resetting elevator");
-          elevatorController.reset();
-        }, this));
+      }, this);
+  }
+
+  public Command resetElevator() {
+    return new RunCommand(() -> {
+      elevatorController.setP(ElevatorConstants.kP);
+    });
   }
 
   public void moveElevator(double speed) {
@@ -90,8 +90,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setElevatorLocation(double height) {
-    double speed = elevatorController.calculate(heightValue, height);
+    double error = height - heightValue;
+    if (error < 0.1) {
+      elevatorController.setP(ElevatorConstants.kP/(Math.abs(error)*3.3+0.67));
+    }
+    double speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+ElevatorConstants.kG;
     moveElevator(speed);
+    System.out.println("Height: " + heightValue + " Error: " + error + " Speed: " + speed);
   }
 
   @Override
