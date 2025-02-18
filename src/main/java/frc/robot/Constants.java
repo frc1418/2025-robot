@@ -18,7 +18,7 @@ public final class Constants {
     public static final int FRONT_LEFT_ANGLE_ID = 3;
     public static final int FRONT_LEFT_SPEED_ID = 4;
     public static final Translation2d FRONT_LEFT_LOC = new Translation2d(wheelPos, wheelPos);
-    public static final double FRONT_LEFT_ENCODER_OFFSET = 3.783+Math.PI/2;
+    public static final double FRONT_LEFT_ENCODER_OFFSET = 3.43+Math.PI;
     public static final double FRONT_LEFT_P = 0.00040465;
     public static final double FRONT_LEFT_D = 0;
     public static final double FRONT_LEFT_KS = 0.17025;
@@ -28,18 +28,17 @@ public final class Constants {
     public static final int FRONT_RIGHT_ANGLE_ID = 5;
     public static final int FRONT_RIGHT_SPEED_ID = 6;
     public static final Translation2d FRONT_RIGHT_LOC = new Translation2d(wheelPos, -wheelPos);
-    public static final double FRONT_RIGHT_ENCODER_OFFSET = 3.672;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = 0.7968+Math.PI;
     public static final double FRONT_RIGHT_P = 0.00080684;
     public static final double FRONT_RIGHT_D = 0;
     public static final double FRONT_RIGHT_KS = 0.22297;
     public static final double FRONT_RIGHT_KV = 2.6277;
     public static final double FRONT_RIGHT_KA = 0.38782;
     
-
     public static final int BACK_LEFT_ANGLE_ID = 1;
     public static final int BACK_LEFT_SPEED_ID = 2;
     public static final Translation2d BACK_LEFT_LOC = new Translation2d(-wheelPos, wheelPos);
-    public static final double BACK_LEFT_ENCODER_OFFSET = 5.339;
+    public static final double BACK_LEFT_ENCODER_OFFSET = 2.1945+Math.PI;
     public static final double BACK_LEFT_P = 0.0012982;
     public static final double BACK_LEFT_D = 0;
     public static final double BACK_LEFT_KS = 0.22297;
@@ -49,7 +48,7 @@ public final class Constants {
     public static final int BACK_RIGHT_ANGLE_ID = 7;
     public static final int BACK_RIGHT_SPEED_ID = 8;
     public static final Translation2d BACK_RIGHT_LOC = new Translation2d(-wheelPos, -wheelPos);
-    public static final double BACK_RIGHT_ENCODER_OFFSET = 0.631-Math.PI/2;
+    public static final double BACK_RIGHT_ENCODER_OFFSET = 1.042+Math.PI;
     public static final double BACK_RIGHT_P = 0.00011772;
     public static final double BACK_RIGHT_D = 0;
     public static final double BACK_RIGHT_KS = 0.21364;
@@ -71,9 +70,11 @@ public final class Constants {
     public final static double ENCODER_SCALAR = 4.43;
     public final static double HEIGHT_BUMP = 0.037;
 
-    public final static double kP = 0.0001;
-    public final static double kI = 0;
-    public final static double kD = 0;
+    public final static double kV = 0.075;
+    public final static double kG = 0.12;
+    public final static double kP = 1.4;
+    public final static double kI = 0.05;
+    public final static double kD = 0.2;
   }
 
   public final static class IntakeConstants {
@@ -84,11 +85,11 @@ public final class Constants {
     public static final int TALON_MOTOR_ID = 1;
 
     // Conversion factor from falcon motor rotations to radians of arm rotation
-    // -15.48633 is roughly the gear ratio between the motor and the arm
-    public static final double pivotRotationsToArmRotations = -15.48633;
-    // Starting point of arm when resting on bumpers
-    public static final double pivotOffsetFromStart = -0.0727
-    ;
+    // -16 is roughly the gear ratio between the motor and the arm
+    public static final double pivotRotationsToArmRotations = -16;
+    // Starting point of arm when resting on hard stop
+    public static final double pivotOffsetFromStart = 0.25; //36 degrees up 22.2 percent elevator to intake
+    public static final double kG = -0.03;
   }
   public final static class PneumaticsConstants {
     public final static int PNEUMATICS_HUB_ID = 21;
