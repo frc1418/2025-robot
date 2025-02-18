@@ -127,8 +127,8 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem() {
         swerveModulePositions = getModulePositions();
         ally = DriverStation.getAlliance();
-        fieldOdometry = new FieldSpaceOdometry(swerveModulePositions.get());
-        targetOdometry = new TargetSpaceOdometry(swerveModulePositions.get(), fieldOdometry);
+        fieldOdometry = new FieldSpaceOdometry(getFirstModulePositions());
+        targetOdometry = new TargetSpaceOdometry(getFirstModulePositions(), fieldOdometry);
         resetLockRot();
 
         try{
@@ -160,6 +160,15 @@ public class DriveSubsystem extends SubsystemBase {
             },
             this // Reference to this subsystem to set requirements
         );
+    }
+
+    public SwerveModulePosition[] getFirstModulePositions() {
+        return new SwerveModulePosition[] {
+            frontLeftWheel.getPosition(),
+            frontRightWheel.getPosition(),
+            backLeftWheel.getPosition(),
+            backRightWheel.getPosition()
+        };
     }
 
     private Optional<SwerveModulePosition[]> getModulePositions() {
