@@ -90,7 +90,14 @@ public class PivotSubsystem extends SubsystemBase {
   public Command holdPivot() {
     return new RunCommand(
       () -> {
-        setPivot(-0.03);
+        System.out.println("Position: " + pivotMotor.getPosition().getValueAsDouble());
+        if (pivotMotor.getPosition().getValueAsDouble() < 0.25) {
+          setPivot(PivotConstants.kG*Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2));
+          System.out.println("Force: " + Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2));
+        }
+        else {
+          setPivot(0);
+        }
       }, this);
   }
 
