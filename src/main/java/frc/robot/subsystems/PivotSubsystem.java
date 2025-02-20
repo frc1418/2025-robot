@@ -4,16 +4,12 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.*;
-
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -30,29 +26,14 @@ public class PivotSubsystem extends SubsystemBase {
   private final NetworkTable table = ntInstance.getTable("/components/pivot");
   private final NetworkTableEntry ntPivotAmount = table.getEntry("pivotAmountDegrees");
   private final NetworkTableEntry ntPivotSpeed = table.getEntry("pivotSpeedDegreesPerSecond");
-  private final MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(0);
+
+  private final PIDController pivotController = new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
 
   public PivotSubsystem() {
     pivotMotor.setPosition(PivotConstants.pivotOffsetFromStart);
 
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    FeedbackConfigs feedbackConfigs = talonConfig.Feedback;
-    feedbackConfigs.SensorToMechanismRatio = PivotConstants.pivotRotationsToArmRotations;
-    MotionMagicConfigs motionMagicConfigs = talonConfig.MotionMagic;
-    motionMagicConfigs
-      .withMotionMagicCruiseVelocity(RotationsPerSecond.of(0.1)) // 1 (mechanism) rotations per 10 second cruise
-      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(0.1)) // Take approximately 0.5 seconds to reach max vel
-      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(20)); // Take approximately 0.1 seconds to reach max accel 
-
-    // TODO: Tune these values they are prob way too high
-    Slot0Configs slot0 = talonConfig.Slot0;
-    slot0.kS = 0.25; // Add 0.25 V output to overcome static friction
-    slot0.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-    slot0.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0.kP = 60; // A position error of 0.2 rotations results in 12 V output
-    slot0.kI = 0; // No output for integrated error
-    slot0.kD = 0.5; // A velocity error of 1 rps results in 0.5 V output
 
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
@@ -64,13 +45,14 @@ public class PivotSubsystem extends SubsystemBase {
     }
   }
 
-  public void setPivot(double speed) {
-    pivotMotor.set(speed);
+  public void setPivotLocation(double posDegrees) {
+    double force = -pivotController.calculate(pivotMotor.getPosition().getValueAsDouble()*360, posDegrees);
+    force = -(PivotConstants.kLeverage*Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2)+PivotConstants.kG);
+    pivotMotor.set(force);
   }
 
-  public void setPivotLocation(double posRadians) {
-    double posRotations = posRadians / (2*Math.PI);
-    pivotMotor.setControl(motionMagicVoltage.withPosition(posRotations).withSlot(0));
+  public void resetPivot() {
+    pivotController.reset();
   }
 
   public void updatePivot() {
@@ -90,28 +72,21 @@ public class PivotSubsystem extends SubsystemBase {
   public Command holdPivot() {
     return new RunCommand(
       () -> {
-        System.out.println("Position: " + pivotMotor.getPosition().getValueAsDouble());
-        if (pivotMotor.getPosition().getValueAsDouble() < 0.25) {
-          setPivot(PivotConstants.kG*Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2));
-          System.out.println("Force: " + Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2));
-        }
-        else {
-          setPivot(0);
-        }
+        pivotMotor.set(-0.03);
       }, this);
   }
 
   public Command pivotUp() {
     return new RunCommand(
       () -> {
-        setPivot(-0.1);
+        pivotMotor.set(-0.1);
       }, this);
   }
 
   public Command pivotDown() {
     return new RunCommand(
       () -> {
-        setPivot(0.02);
+        pivotMotor.set(0.02);
       }, this);
   }
 

@@ -34,7 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
 
-  private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+  private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
   private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.75);
 
   private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
@@ -77,12 +77,6 @@ public class ElevatorSubsystem extends SubsystemBase {
       }, this);
   }
 
-  public Command resetElevator() {
-    return new RunCommand(() -> {
-      elevatorController.setP(ElevatorConstants.kP);
-    });
-  }
-
   public void moveElevator(double speed) {
     speed = speedLimiter.calculate(speed);
     motor1.set(speed);
@@ -91,10 +85,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setElevatorLocation(double height) {
     double error = height - heightValue;
-    if (error < 0.1) {
-      elevatorController.setP(ElevatorConstants.kP/(Math.abs(error)*3.3+0.67));
+    double speed;
+    if (Math.abs(error) < 0.005) {
+      speed = ElevatorConstants.kG;
     }
-    double speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+ElevatorConstants.kG;
+    else {
+      speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+ElevatorConstants.kG;
+    }
+    if (Math.abs(speed) > 0.75) {
+      System.out.println("TRYING TO GO: " + speed);
+      speed = Math.signum(speed)*0.75;
+    }
     moveElevator(speed);
     System.out.println("Height: " + heightValue + " Error: " + error + " Speed: " + speed);
   }

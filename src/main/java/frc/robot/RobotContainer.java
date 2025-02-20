@@ -84,14 +84,10 @@ public class RobotContainer {
     altJoystick.button(6).whileTrue(pivotSubsytem.pivotUp());
     altJoystick.button(9).onTrue(climbSubsystem.toggleAttach());
     altJoystick.button(10).onTrue(climbSubsystem.toggleClimb());
-    altJoystick.pov(0).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.75));
-    altJoystick.pov(0).onFalse(elevatorSubsystem.resetElevator());
-    altJoystick.pov(90).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
-    altJoystick.pov(90).onFalse(elevatorSubsystem.resetElevator());
-    altJoystick.pov(180).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.1));
-    altJoystick.pov(180).onFalse(elevatorSubsystem.resetElevator());
-    altJoystick.pov(270).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.99));
-    altJoystick.pov(270).onFalse(elevatorSubsystem.resetElevator());
+    altJoystick.pov(0).whileTrue(elevatorSubsystem.moveElevatorToHeight(1.01));
+    altJoystick.pov(90).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.1));
+    altJoystick.pov(180).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
+    altJoystick.pov(270).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.75));
   }
 
   public double applyDeadband(double input, double deadband) {
