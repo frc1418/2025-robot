@@ -27,9 +27,12 @@ public class PivotSubsystem extends SubsystemBase {
   private final NetworkTableEntry ntPivotAmount = table.getEntry("pivotAmountDegrees");
   private final NetworkTableEntry ntPivotSpeed = table.getEntry("pivotSpeedDegreesPerSecond");
 
+  private IntakeSubsystem intakeSubsystem;
+
   private final PIDController pivotController = new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
 
-  public PivotSubsystem() {
+  public PivotSubsystem(IntakeSubsystem intakeSubsystem) {
+    this.intakeSubsystem = intakeSubsystem;
     pivotMotor.setPosition(PivotConstants.pivotOffsetFromStart);
 
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();

@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private final SparkFlex intakeMotor = new SparkFlex(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
   private final SparkFlexConfig motorConfig = new SparkFlexConfig();
 
-  private DigitalInput topLimitSwitch = new DigitalInput(0);
+  private DigitalInput coralSwitch = new DigitalInput(0);
 
   private boolean hasCoral = true;
 
@@ -64,9 +64,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (topLimitSwitch.get())
+    if (coralSwitch.get()) {
       hasCoral = true;
-    else
+    }
+    else 
       hasCoral = false;
   }
 

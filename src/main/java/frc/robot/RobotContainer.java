@@ -24,10 +24,10 @@ public class RobotContainer {
   
   private final SendableChooser<Command> autoChooser;
 
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final PivotSubsystem pivotSubsytem = new PivotSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(intakeSubsystem);
+  private final PivotSubsystem pivotSubsytem = new PivotSubsystem(intakeSubsystem);
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
 
   CommandJoystick leftJoystick = new CommandJoystick(0);
@@ -76,7 +76,7 @@ public class RobotContainer {
     rightJoystick.button(3).onFalse(driveSubsystem.correctError());
     rightJoystick.button(4).whileTrue(driveSubsystem.turtle());
 
-    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(0));
+    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(-0.05));
     altJoystick.button(2).whileTrue(intakeSubsystem.intakeOut());
     altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.3));
     altJoystick.button(4).whileTrue(intakeSubsystem.intakeIn());
