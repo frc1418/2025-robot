@@ -46,6 +46,10 @@ public class ClimbSubsystem extends SubsystemBase {
     attachSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
+  public Boolean isClimbing() {
+    return climbPistonsOut;
+  }
+
   public void climbToggle(){
     climbSolenoid.toggle();
     climbPistonsOut = !climbPistonsOut;

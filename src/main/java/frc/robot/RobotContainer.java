@@ -25,10 +25,10 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(intakeSubsystem);
   private final PivotSubsystem pivotSubsytem = new PivotSubsystem(intakeSubsystem);
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem(climbSubsystem);
 
   CommandJoystick leftJoystick = new CommandJoystick(0);
   CommandJoystick rightJoystick = new CommandJoystick(1);
