@@ -42,6 +42,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double lastHeight;
   private double initialHeight;
   private double heightValue;
+  private double kG = ElevatorConstants.kG;
 
   public ElevatorSubsystem(IntakeSubsystem intakeSubsystem) {
     motorConfig.idleMode(IdleMode.kBrake);
@@ -57,7 +58,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return new RunCommand(
       () -> {
         if (heightValue > 0.03) {
-          moveElevator(ElevatorConstants.kG+ElevatorConstants.kCoral);
+          moveElevator(kG);
         }
         else {
           moveElevator(0);
@@ -68,7 +69,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public Command runElevator(double speed) {
     return new RunCommand(
       () -> {
-        moveElevator(speed+ElevatorConstants.kCoral);
+        moveElevator(speed+kG);
       }, this);
   }
 
@@ -89,10 +90,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     double error = height - heightValue;
     double speed;
     if (Math.abs(error) < 0.005) {
-      speed = ElevatorConstants.kG+ElevatorConstants.kCoral;
+      speed = kG;
     }
     else {
-      speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+ElevatorConstants.kG+ElevatorConstants.kCoral;
+      speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+kG;
     }
     if (Math.abs(speed) > 0.75) {
       System.out.println("TRYING TO GO: " + speed);
@@ -104,11 +105,13 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println("has coral");
     if (intakeSubsystem.getHasCoral()) {
-      System.out.println("Has coral!");
+      kG = ElevatorConstants.kG+ElevatorConstants.kCoral;
     }
     else {
       System.out.println("no coral :(");
+      kG = ElevatorConstants.kG;
     }
     double rawPosition = elevatorEncoder.getPosition();
     double deltaHeight = rawPosition - lastHeight;

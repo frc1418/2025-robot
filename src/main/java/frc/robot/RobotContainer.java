@@ -76,9 +76,9 @@ public class RobotContainer {
     rightJoystick.button(3).onFalse(driveSubsystem.correctError());
     rightJoystick.button(4).whileTrue(driveSubsystem.turtle());
 
-    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(-0.05));
+    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(-0.2));
     altJoystick.button(2).whileTrue(intakeSubsystem.intakeOut());
-    altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.3));
+    altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.15));
     altJoystick.button(4).whileTrue(intakeSubsystem.intakeIn());
     altJoystick.button(5).whileTrue(pivotSubsytem.pivotDown());
     altJoystick.button(6).whileTrue(pivotSubsytem.pivotUp());
