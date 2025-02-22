@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -13,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +25,13 @@ public class PivotSubsystem extends SubsystemBase {
   private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
   private final NetworkTable table = ntInstance.getTable("/components/pivot");
   private final NetworkTableEntry ntPivotAmount = table.getEntry("pivotAmountDegrees");
-  private final NetworkTableEntry ntPivotSpeed = table.getEntry("pivotSpeedDegreesPerSecond");
+
+  private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(6);
+
+  private double lastPivot;
+  private double initialPivot = PivotConstants.PIVOT_OFFSET+pivotEncoder.get();
+  private double pivotValue;
+  private double encoderScalar = PivotConstants.ENCODER_SCALAR;
 
   private IntakeSubsystem intakeSubsystem;
 
@@ -33,7 +39,6 @@ public class PivotSubsystem extends SubsystemBase {
 
   public PivotSubsystem(IntakeSubsystem intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
-    pivotMotor.setPosition(PivotConstants.pivotOffsetFromStart);
 
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -59,8 +64,18 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public void updatePivot() {
-    ntPivotAmount.setDouble(pivotMotor.getPosition().getValueAsDouble()*360);
-    ntPivotSpeed.setDouble(pivotMotor.getVelocity().getValueAsDouble()*360);
+    double rawPosition = pivotEncoder.get();
+    double deltaPivot = rawPosition - lastPivot;
+    while (deltaPivot < -0.5) {
+      deltaPivot += 1;
+    }
+    while (deltaPivot > 0.5) {
+      deltaPivot -= 1;
+    }
+    lastPivot += deltaPivot;
+    double normalizedPivot = lastPivot/encoderScalar;
+    pivotValue = normalizedPivot - initialPivot;
+    ntPivotAmount.setDouble(pivotValue);
   }
 
   public double getPivotAmount() {

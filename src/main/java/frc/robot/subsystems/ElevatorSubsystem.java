@@ -50,7 +50,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorEncoder = motor1.getAbsoluteEncoder();
     lastHeight = elevatorEncoder.getPosition();
-    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.HEIGHT_BUMP)/encoderScalar;
+    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
     this.intakeSubsystem = intakeSubsystem;
   }
 
