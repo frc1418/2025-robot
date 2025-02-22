@@ -91,19 +91,20 @@ public class MaxWheelModule extends SubsystemBase {
   }
 
   public boolean checkError() {
-    if (speedMotor.getLastError() == REVLibError.kOk) {
-      if (angleMotor.getLastError() == REVLibError.kOk) {
-        return true;
-      }
-      else {
-        System.out.println("Error with angle motor: " + angleMotor.getDeviceId());
-        return false;
-      }
-    }
-    else {
+    if (speedMotor.getLastError() != REVLibError.kOk) {
       System.out.println("Error with speed motor: " + speedMotor.getDeviceId());
+      System.out.println("Error: " + speedMotor.getLastError());
+      speedMotor.clearFaults();
       return false;
     }
+    else if (angleMotor.getLastError() != REVLibError.kOk) {
+      System.out.println("Error with angle motor: " + angleMotor.getDeviceId());
+      System.out.println("Error: " + angleMotor.getLastError());
+      angleMotor.clearFaults();
+      return false;    
+    }
+    else
+      return true;
   }
 
   public void setWheelSpeed(double speed) {

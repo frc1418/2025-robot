@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AlignByFieldPose;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.AlignByAprilTagLL;
 import frc.robot.commands.AlignRot;
 import frc.robot.subsystems.ClimbSubsystem;  
@@ -16,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 public class RobotContainer {
@@ -47,13 +49,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    //Positive x moves bot forwards and positive y moves bot to the left
-    // driveSubsystem.setDefaultCommand(new RunCommand(() -> {
-    //   driveSubsystem.drive(
-    //     -applyDeadband(leftJoystick.getY(), DrivetrainConstants.DRIFT_DEADBAND),
-    //     -applyDeadband(leftJoystick.getX(), DrivetrainConstants.DRIFT_DEADBAND),
-    //     -applyDeadband(rightJoystick.getX(), DrivetrainConstants.ROTATION_DEADBAND));
-    // }, driveSubsystem));
+    // Positive x moves bot forwards and positive y moves bot to the left
+    driveSubsystem.setDefaultCommand(new RunCommand(() -> {
+      driveSubsystem.drive(
+        -applyDeadband(leftJoystick.getY(), DrivetrainConstants.DRIFT_DEADBAND),
+        -applyDeadband(leftJoystick.getX(), DrivetrainConstants.DRIFT_DEADBAND),
+        -applyDeadband(rightJoystick.getX(), DrivetrainConstants.ROTATION_DEADBAND));
+    }, driveSubsystem));
 
     elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdElevator());
     pivotSubsytem.setDefaultCommand(pivotSubsytem.holdPivot());
@@ -74,14 +76,18 @@ public class RobotContainer {
     rightJoystick.button(3).onFalse(driveSubsystem.correctError());
     rightJoystick.button(4).whileTrue(driveSubsystem.turtle());
 
-    altJoystick.button(1).whileTrue(elevatorSubsystem.moveElevatorDown());
+    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(0));
     altJoystick.button(2).whileTrue(intakeSubsystem.intakeOut());
-    altJoystick.button(3).whileTrue(elevatorSubsystem.moveElevatorUp());
+    altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.3));
     altJoystick.button(4).whileTrue(intakeSubsystem.intakeIn());
     altJoystick.button(5).whileTrue(pivotSubsytem.pivotDown());
     altJoystick.button(6).whileTrue(pivotSubsytem.pivotUp());
     altJoystick.button(9).onTrue(climbSubsystem.toggleAttach());
     altJoystick.button(10).onTrue(climbSubsystem.toggleClimb());
+    altJoystick.pov(0).whileTrue(elevatorSubsystem.moveElevatorToHeight(1.01));
+    altJoystick.pov(90).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.1));
+    altJoystick.pov(180).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
+    altJoystick.pov(270).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.75));
   }
 
   public double applyDeadband(double input, double deadband) {

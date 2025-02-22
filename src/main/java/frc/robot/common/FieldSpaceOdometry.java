@@ -112,6 +112,10 @@ public class FieldSpaceOdometry {
         if (modulePositions != null) {
             this.modulePositions = modulePositions;
         }
+        else {
+            System.out.println("Module positions are null");
+        }
+        
         if (DriverStation.isEnabled()) {
             rotJustCorrected = false;
             boolean rejectVision = false;

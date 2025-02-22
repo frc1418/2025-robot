@@ -11,6 +11,9 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -31,8 +34,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
 
-  private double encoderScalar = 4.43
-  ;
+  private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
+  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.75);
+
+  private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
   private double lastHeight;
   private double initialHeight;
   private double heightValue;
@@ -43,33 +48,56 @@ public class ElevatorSubsystem extends SubsystemBase {
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorEncoder = motor1.getAbsoluteEncoder();
     lastHeight = elevatorEncoder.getPosition();
-    initialHeight = (elevatorEncoder.getPosition()+0.037)/encoderScalar;
+    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.HEIGHT_BUMP)/encoderScalar;
   }
 
   public Command holdElevator() {
     return new RunCommand(
       () -> {
-        moveElevator(0.1);
+        if (heightValue > 0.03) {
+          moveElevator(ElevatorConstants.kG);
+        }
+        else {
+          moveElevator(0);
+        }
       }, this);
   }
 
-  public Command moveElevatorUp() {
+  public Command runElevator(double speed) {
     return new RunCommand(
       () -> {
-        moveElevator(0.3);
+        moveElevator(speed);
       }, this);
   }
 
-  public Command moveElevatorDown() {
+  public Command moveElevatorToHeight(double height) {
     return new RunCommand(
       () -> {
-        moveElevator(0);
+        setElevatorLocation(height);
       }, this);
   }
 
   public void moveElevator(double speed) {
+    speed = speedLimiter.calculate(speed);
     motor1.set(speed);
     motor2.set(speed);
+  }
+
+  public void setElevatorLocation(double height) {
+    double error = height - heightValue;
+    double speed;
+    if (Math.abs(error) < 0.005) {
+      speed = ElevatorConstants.kG;
+    }
+    else {
+      speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+ElevatorConstants.kG;
+    }
+    if (Math.abs(speed) > 0.75) {
+      System.out.println("TRYING TO GO: " + speed);
+      speed = Math.signum(speed)*0.75;
+    }
+    moveElevator(speed);
+    System.out.println("Height: " + heightValue + " Error: " + error + " Speed: " + speed);
   }
 
   @Override
