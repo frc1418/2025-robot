@@ -32,6 +32,7 @@ public class PivotSubsystem extends SubsystemBase {
   private double initialPivot = PivotConstants.PIVOT_OFFSET+pivotEncoder.get();
   private double pivotValue;
   private double encoderScalar = PivotConstants.ENCODER_SCALAR;
+  private double kG = PivotConstants.kG;
 
   private IntakeSubsystem intakeSubsystem;
 
@@ -55,7 +56,7 @@ public class PivotSubsystem extends SubsystemBase {
 
   public void setPivotLocation(double posDegrees) {
     double force = -pivotController.calculate(pivotMotor.getPosition().getValueAsDouble()*360, posDegrees);
-    force = -(PivotConstants.kLeverage*Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2)+PivotConstants.kG);
+    force = -(PivotConstants.kG*Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2)+PivotConstants.kConstant);
     pivotMotor.set(force);
   }
 
@@ -78,8 +79,17 @@ public class PivotSubsystem extends SubsystemBase {
     ntPivotAmount.setDouble(pivotValue);
   }
 
-  public double getPivotAmount() {
-    return ntPivotAmount.getDouble(getPivotAmount());
+  public void updateFF() {
+    if (intakeSubsystem.getHasCoral()) {
+      kG = PivotConstants.kG+PivotConstants.kCoral;
+    }
+    else {
+      kG = PivotConstants.kG;
+    }
+  }
+
+  public double getPivotDegrees() {
+    return pivotValue*360;
   }
 
   public void resetPivotEncoder() {
@@ -111,6 +121,7 @@ public class PivotSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     updatePivot();
+    updateFF();
   }
 
   @Override

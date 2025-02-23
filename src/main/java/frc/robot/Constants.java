@@ -89,8 +89,9 @@ public final class Constants {
     // Starting point of arm when resting on hard stop
     public static final double PIVOT_OFFSET = -0.877; //36 degrees up 22.2 percent elevator to intake
     // kLeverage plus kG must be no less than -0.045 to keep falcon happy
-    public static final double kLeverage = 0.02;
+    public static final double kCoral = 0.01;
     public static final double kG = 0.02;
+    public static final double kConstant = 0.02;
 
     public final static double kP = 0.0001;
     public final static double kI = 0.00005;

@@ -103,14 +103,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     System.out.println("Height: " + heightValue + " Error: " + error + " Speed: " + speed);
   }
 
-  @Override
-  public void periodic() {
-    if (intakeSubsystem.getHasCoral()) {
-      kG = ElevatorConstants.kG+ElevatorConstants.kCoral;
-    }
-    else {
-      kG = ElevatorConstants.kG;
-    }
+  public void updateElevator() {
     double rawPosition = elevatorEncoder.getPosition();
     double deltaHeight = rawPosition - lastHeight;
     while (deltaHeight < -0.5) {
@@ -124,6 +117,21 @@ public class ElevatorSubsystem extends SubsystemBase {
     heightValue = normalizedHeight - initialHeight;
     ntElevatorHeight.setDouble(heightValue);
     ntElevatorSpeed.setDouble(elevatorEncoder.getVelocity());
+  }
+
+  public void updateFF() {
+    if (intakeSubsystem.getHasCoral()) {
+      kG = ElevatorConstants.kG+ElevatorConstants.kCoral;
+    }
+    else {
+      kG = ElevatorConstants.kG;
+    }
+  }
+
+  @Override
+  public void periodic() {
+    updateElevator();
+    updateFF();
   }
 
   @Override
