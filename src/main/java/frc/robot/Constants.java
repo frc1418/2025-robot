@@ -71,7 +71,7 @@ public final class Constants {
     public final static double ELEVATOR_OFFSET = 0.037;
 
     public final static double kV = 0.12;
-    public final static double kG = 0.16;
+    public final static double kG = 0.175;
     public final static double kCoral = 0.025;
 
     public final static double kP = 0.65;
@@ -84,12 +84,12 @@ public final class Constants {
 
   public final static class PivotConstants {
     public static final int TALON_MOTOR_ID = 1;
-    public final static double ENCODER_SCALAR = 0.924;
+    public final static double ENCODER_SCALAR = -0.94;
 
     // Starting point of arm when resting on hard stop
-    public static final double PIVOT_OFFSET = -0.877; //36 degrees up 22.2 percent elevator to intake
-    // kLeverage plus kG must be no less than -0.045 to keep falcon happy
-    public static final double kCoral = 0.01;
+    public static final double PIVOT_OFFSET = -0.326; //36 degrees up 22.2 percent elevator to intake
+    // kG plus kConstant must be no more than 0.04 to keep falcon happy
+    public static final double kCoral = 0.015;
     public static final double kG = 0.02;
     public static final double kConstant = 0.02;
 

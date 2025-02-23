@@ -29,7 +29,7 @@ public class PivotSubsystem extends SubsystemBase {
   private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(6);
 
   private double lastPivot;
-  private double initialPivot = PivotConstants.PIVOT_OFFSET+pivotEncoder.get();
+  private double initialPivot = PivotConstants.PIVOT_OFFSET;
   private double pivotValue;
   private double encoderScalar = PivotConstants.ENCODER_SCALAR;
   private double kG = PivotConstants.kG;
@@ -40,6 +40,7 @@ public class PivotSubsystem extends SubsystemBase {
 
   public PivotSubsystem(IntakeSubsystem intakeSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
+    lastPivot = pivotEncoder.get()-1;
 
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -67,6 +68,9 @@ public class PivotSubsystem extends SubsystemBase {
   public void updatePivot() {
     double rawPosition = pivotEncoder.get();
     double deltaPivot = rawPosition - lastPivot;
+    // System.out.println("delta pivot: " + deltaPivot);
+    // System.out.println("last pivot: " + lastPivot);
+    // System.out.println("initial pivot:" + initialPivot);
     while (deltaPivot < -0.5) {
       deltaPivot += 1;
     }
@@ -75,8 +79,10 @@ public class PivotSubsystem extends SubsystemBase {
     }
     lastPivot += deltaPivot;
     double normalizedPivot = lastPivot/encoderScalar;
+    // System.out.println("normalized pivot: " + normalizedPivot);
     pivotValue = normalizedPivot - initialPivot;
-    ntPivotAmount.setDouble(pivotValue);
+    // System.out.println("pivot value: " + pivotValue);
+    ntPivotAmount.setDouble(pivotValue*360);
   }
 
   public void updateFF() {
@@ -92,29 +98,22 @@ public class PivotSubsystem extends SubsystemBase {
     return pivotValue*360;
   }
 
-  public void resetPivotEncoder() {
-    pivotMotor.setPosition(0);
-    ntPivotAmount.setDouble(0);
-}
+  public double maintainAngle() {
+    double force = -(PivotConstants.kConstant+kG*Math.cos(pivotValue*2*Math.PI));
+    return force;
+  }
 
   public Command holdPivot() {
     return new RunCommand(
       () -> {
-        pivotMotor.set(-0.03);
+        pivotMotor.set(maintainAngle());
       }, this);
   }
 
-  public Command pivotUp() {
+  public Command pivot(double speed) {
     return new RunCommand(
       () -> {
-        pivotMotor.set(-0.1);
-      }, this);
-  }
-
-  public Command pivotDown() {
-    return new RunCommand(
-      () -> {
-        pivotMotor.set(0.02);
+        pivotMotor.set(speed+maintainAngle());
       }, this);
   }
 
