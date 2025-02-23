@@ -106,11 +106,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (intakeSubsystem.getHasCoral()) {
-      System.out.println("has coral");
       kG = ElevatorConstants.kG+ElevatorConstants.kCoral;
     }
     else {
-      System.out.println("no coral :(");
       kG = ElevatorConstants.kG;
     }
     double rawPosition = elevatorEncoder.getPosition();

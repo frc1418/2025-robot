@@ -11,6 +11,9 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -18,6 +21,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
+  private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
+  private final NetworkTable table = ntInstance.getTable("/components/intake");
+
+  private final NetworkTableEntry ntHasCoral = table.getEntry("hasCoral");
 
   private final SparkFlex intakeMotor = new SparkFlex(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
   private final SparkFlexConfig motorConfig = new SparkFlexConfig();
@@ -66,12 +73,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     if (coralSwitch.get()) {
       hasCoral = true;
-      System.out.println("true");
     }
     else {
       hasCoral = false;
-      System.out.println("false");
     }
+    ntHasCoral.setBoolean(hasCoral);
   }
 
   @Override
