@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 5.35,
+        "y": 5.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0,
-        "y": 0.0
+        "x": 5.476656928643876,
+        "y": 4.898298792120913
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef I"
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 0.0
+        "x": 1.3499254499162945,
+        "y": 6.945256260463169
       },
       "prevControl": {
-        "x": 1.0,
-        "y": 1.2246467991473532e-16
+        "x": 1.0983772797673135,
+        "y": 7.08196368274748
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Intake"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 126.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Auto Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

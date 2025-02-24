@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.297143118722098,
-        "y": 2.827588326590402
+        "x": 1.3499254499162945,
+        "y": 6.945256260463169
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.545354194006059,
-        "y": 2.8574423398278186
+        "x": 1.540063407752859,
+        "y": 6.782936954803796
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Intake"
     },
     {
       "anchor": {
-        "x": 2.297143118722098,
-        "y": 5.6213448660714285
+        "x": 5.126,
+        "y": 5.384
       },
       "prevControl": {
-        "x": 2.1429196679986586,
-        "y": 5.424583266039932
+        "x": 4.616872381342122,
+        "y": 5.500859592650643
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef J"
     }
   ],
   "rotationTargets": [],
@@ -34,21 +34,21 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 90.0,
+    "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Auto Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 126.0
   },
   "useDefaultConstraints": true
 }

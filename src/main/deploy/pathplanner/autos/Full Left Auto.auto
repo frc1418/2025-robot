@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToIntake"
+            "pathName": "Start Left to Reef I"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeToReef"
+            "pathName": "Reef I to Left Intake"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ReefToIntake"
+            "pathName": "Left Intake to Reef J"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeToReef"
+            "pathName": "Reef J to Left Intake"
           }
         },
         {
@@ -55,7 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ReefToIntake"
+            "pathName": "Left Intake to Reef K"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef K to Left Intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Intake to Reef L"
           }
         }
       ]
