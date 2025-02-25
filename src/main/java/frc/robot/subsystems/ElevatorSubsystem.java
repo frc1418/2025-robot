@@ -33,6 +33,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax motor2 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
+  private IntakeSubsystem intakeSubsystem;
 
   private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
   private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.75);
@@ -41,21 +42,23 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double lastHeight;
   private double initialHeight;
   private double heightValue;
+  private double kG = ElevatorConstants.kG;
 
-  public ElevatorSubsystem() {
+  public ElevatorSubsystem(IntakeSubsystem intakeSubsystem) {
     motorConfig.idleMode(IdleMode.kBrake);
     motor1.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorEncoder = motor1.getAbsoluteEncoder();
     lastHeight = elevatorEncoder.getPosition();
-    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.HEIGHT_BUMP)/encoderScalar;
+    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
+    this.intakeSubsystem = intakeSubsystem;
   }
 
   public Command holdElevator() {
     return new RunCommand(
       () -> {
         if (heightValue > 0.03) {
-          moveElevator(ElevatorConstants.kG);
+          moveElevator(kG);
         }
         else {
           moveElevator(0);
@@ -66,7 +69,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public Command runElevator(double speed) {
     return new RunCommand(
       () -> {
-        moveElevator(speed);
+        moveElevator(speed+kG);
       }, this);
   }
 
@@ -87,10 +90,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     double error = height - heightValue;
     double speed;
     if (Math.abs(error) < 0.005) {
-      speed = ElevatorConstants.kG;
+      speed = kG;
     }
     else {
-      speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+ElevatorConstants.kG;
+      speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+kG;
     }
     if (Math.abs(speed) > 0.75) {
       System.out.println("TRYING TO GO: " + speed);
@@ -100,8 +103,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     System.out.println("Height: " + heightValue + " Error: " + error + " Speed: " + speed);
   }
 
-  @Override
-  public void periodic() {
+  public void updateElevator() {
     double rawPosition = elevatorEncoder.getPosition();
     double deltaHeight = rawPosition - lastHeight;
     while (deltaHeight < -0.5) {
@@ -115,6 +117,21 @@ public class ElevatorSubsystem extends SubsystemBase {
     heightValue = normalizedHeight - initialHeight;
     ntElevatorHeight.setDouble(heightValue);
     ntElevatorSpeed.setDouble(elevatorEncoder.getVelocity());
+  }
+
+  public void updateFF() {
+    if (intakeSubsystem.getHasCoral()) {
+      kG = ElevatorConstants.kG+ElevatorConstants.kCoral;
+    }
+    else {
+      kG = ElevatorConstants.kG;
+    }
+  }
+
+  @Override
+  public void periodic() {
+    updateElevator();
+    updateFF();
   }
 
   @Override

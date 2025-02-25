@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -13,7 +12,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PivotConstants;
@@ -25,12 +26,22 @@ public class PivotSubsystem extends SubsystemBase {
   private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
   private final NetworkTable table = ntInstance.getTable("/components/pivot");
   private final NetworkTableEntry ntPivotAmount = table.getEntry("pivotAmountDegrees");
-  private final NetworkTableEntry ntPivotSpeed = table.getEntry("pivotSpeedDegreesPerSecond");
+
+  private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(6);
+
+  private double lastPivot;
+  private double initialPivot = PivotConstants.PIVOT_OFFSET;
+  private double pivotValue;
+  private double encoderScalar = PivotConstants.ENCODER_SCALAR;
+  private double kG = PivotConstants.kG;
+
+  private IntakeSubsystem intakeSubsystem;
 
   private final PIDController pivotController = new PIDController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD);
 
-  public PivotSubsystem() {
-    pivotMotor.setPosition(PivotConstants.pivotOffsetFromStart);
+  public PivotSubsystem(IntakeSubsystem intakeSubsystem) {
+    this.intakeSubsystem = intakeSubsystem;
+    lastPivot = pivotEncoder.get()-1;
 
     TalonFXConfiguration talonConfig = new TalonFXConfiguration();
     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -46,9 +57,24 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public void setPivotLocation(double posDegrees) {
-    double force = -pivotController.calculate(pivotMotor.getPosition().getValueAsDouble()*360, posDegrees);
-    force = -(PivotConstants.kLeverage*Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2)+PivotConstants.kG);
-    pivotMotor.set(force);
+    double force = maintainAngle(posDegrees);
+
+    double error = posDegrees - pivotValue*360;
+    System.out.println("error: " + error);
+    if (error < 0.25) {
+      pivotMotor.set(force);
+      resetPivotPID();
+    }
+    else {
+      force -= pivotController.calculate(pivotValue*360, posDegrees);
+      force -= Math.signum(error) * PivotConstants.kV;
+      System.out.println("force: " + force);
+      System.out.println("PID: " + force);
+      if (Math.abs(force) > 0.1) {
+        force = Math.signum(force)*0.1;
+      }
+      pivotMotor.set(force);
+    }
   }
 
   public void resetPivot() {
@@ -56,43 +82,71 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public void updatePivot() {
-    ntPivotAmount.setDouble(pivotMotor.getPosition().getValueAsDouble()*360);
-    ntPivotSpeed.setDouble(pivotMotor.getVelocity().getValueAsDouble()*360);
+    double rawPosition = pivotEncoder.get();
+    double deltaPivot = rawPosition - lastPivot;
+    while (deltaPivot < -0.5) {
+      deltaPivot += 1;
+    }
+    while (deltaPivot > 0.5) {
+      deltaPivot -= 1;
+    }
+    lastPivot += deltaPivot;
+    double normalizedPivot = lastPivot/encoderScalar;
+    pivotValue = normalizedPivot - initialPivot;
+    ntPivotAmount.setDouble(pivotValue*360);
   }
 
-  public double getPivotAmount() {
-    return ntPivotAmount.getDouble(getPivotAmount());
+  public void updateFF() {
+    if (intakeSubsystem.getHasCoral()) {
+      kG = PivotConstants.kG+PivotConstants.kCoral;
+    }
+    else {
+      kG = PivotConstants.kG;
+    }
   }
 
-  public void resetPivotEncoder() {
-    pivotMotor.setPosition(0);
-    ntPivotAmount.setDouble(0);
-}
+  public double getPivotDegrees() {
+    return pivotValue*360;
+  }
+
+  public double maintainAngle(double pivotDegrees) {
+    double force = -(PivotConstants.kConstant+kG*Math.cos(pivotDegrees*2*Math.PI));
+    return force;
+  }
 
   public Command holdPivot() {
     return new RunCommand(
       () -> {
-        pivotMotor.set(-0.03);
+        pivotMotor.set(maintainAngle(pivotValue));
       }, this);
   }
 
-  public Command pivotUp() {
+  public Command pivot(double speed) {
     return new RunCommand(
       () -> {
-        pivotMotor.set(-0.1);
+        pivotMotor.set(speed+maintainAngle(pivotValue));
       }, this);
   }
 
-  public Command pivotDown() {
+  public Command setPivot(double pivotDegrees) {
     return new RunCommand(
       () -> {
-        pivotMotor.set(0.02);
+        setPivotLocation(pivotDegrees);
+      }, this);
+  }
+
+  public Command resetPivotPID() {
+    return Commands.runOnce(
+      () -> {
+        pivotController.reset();
+        System.out.println("reset");
       }, this);
   }
 
   @Override
   public void periodic() {
     updatePivot();
+    updateFF();
   }
 
   @Override

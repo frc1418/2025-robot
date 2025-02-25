@@ -68,13 +68,13 @@ public final class Constants {
     public final static int ELEVATOR_MOTOR_2_ID = 10;
 
     public final static double ENCODER_SCALAR = 4.43;
-    public final static double HEIGHT_BUMP = 0.037;
+    public final static double ELEVATOR_OFFSET = 0.037;
 
-    public final static double kV = 0.15;
-    public final static double kG = 0.15;
+    public final static double kV = 0.12;
+    public final static double kG = 0.175;
     public final static double kCoral = 0.025;
 
-    public final static double kP = 0.63;
+    public final static double kP = 0.65;
     public final static double kD = 0.25;
   }
 
@@ -84,18 +84,17 @@ public final class Constants {
 
   public final static class PivotConstants {
     public static final int TALON_MOTOR_ID = 1;
+    public final static double ENCODER_SCALAR = -0.97;
 
-    // Conversion factor from falcon motor rotations to radians of arm rotation
-    // -16 is roughly the gear ratio between the motor and the arm
-    public static final double pivotRotationsToArmRotations = -16;
-    // Starting point of arm when resting on hard stop
-    public static final double pivotOffsetFromStart = 0.25; //36 degrees up 22.2 percent elevator to intake
-    // kLeverage plus kG must be no less than -0.045 to keep falcon happy
-    public static final double kLeverage = 0.02;
+    public static final double PIVOT_OFFSET = -0.578888889; //36 degrees up 22.2 percent elevator to intake
+    // kG plus kConstant must be no more than 0.04 to keep falcon happy
+    public static final double kCoral = 0.01;
     public static final double kG = 0.02;
+    public static final double kConstant = 0.025;
+    public static final double kV = 0.1;
 
-    public final static double kP = 0.0001;
-    public final static double kI = 0.00005;
+    public final static double kP = 0.001;
+    public final static double kI = 0;
     public final static double kD = 0.00025;
   }
   public final static class PneumaticsConstants {
