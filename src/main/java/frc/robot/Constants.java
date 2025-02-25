@@ -88,14 +88,15 @@ public final class Constants {
 
     public static final double PIVOT_OFFSET = -0.578888889; //36 degrees up 22.2 percent elevator to intake
     // kG plus kConstant must be no more than 0.04 to keep falcon happy
+    public static final double pivotTolerance = 0.5;
     public static final double kCoral = 0.01;
     public static final double kG = 0.02;
-    public static final double kConstant = 0.025;
-    public static final double kV = 0.1;
+    public static final double kConstant = 0.02;
+    public static final double kV = 0.0175;
 
-    public final static double kP = 0.001;
+    public final static double kP = 0.0015;
     public final static double kI = 0;
-    public final static double kD = 0.00025;
+    public final static double kD = 0.0005;
   }
   public final static class PneumaticsConstants {
     public final static int PNEUMATICS_HUB_ID = 21;

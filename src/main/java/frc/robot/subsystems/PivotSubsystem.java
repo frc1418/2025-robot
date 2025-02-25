@@ -60,12 +60,12 @@ public class PivotSubsystem extends SubsystemBase {
     double force = maintainAngle(posDegrees);
 
     double error = posDegrees - pivotValue*360;
-    System.out.println("error: " + error);
-    if (error < 0.25) {
+    if (Math.abs(error) < PivotConstants.pivotTolerance) {
       pivotMotor.set(force);
       resetPivotPID();
     }
     else {
+      System.out.println(pivotController.calculate(pivotValue*360, posDegrees));
       force -= pivotController.calculate(pivotValue*360, posDegrees);
       force -= Math.signum(error) * PivotConstants.kV;
       System.out.println("force: " + force);
