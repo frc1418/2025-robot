@@ -14,6 +14,8 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,12 +42,19 @@ public class RobotContainer {
   private final AlignRot alignRot = new AlignRot(this, driveSubsystem, leftJoystick, 0);
   
   public RobotContainer() {
-    configureBindings();
+      NamedCommands.registerCommand("elevatorIntake", elevatorSubsystem.moveElevatorToHeight(0.222));
+      NamedCommands.registerCommand("elevatorDeliver", elevatorSubsystem.moveElevatorToHeight(1.01));
+      NamedCommands.registerCommand("pivotIntake", pivotSubsytem.setPivot(36));
+      NamedCommands.registerCommand("pivotDeliver", pivotSubsytem.setPivot(0));
+      NamedCommands.registerCommand("intakeIn", intakeSubsystem.intakeIn());
+      NamedCommands.registerCommand("intakeOut", intakeSubsystem.intakeOut());
 
-    // Build an auto chooser. This will use Commands.none() as the default option.
-     autoChooser = AutoBuilder.buildAutoChooser("Test");
-     autoChooser.setDefaultOption("Default Path", null);
-     SmartDashboard.putData("Auto Chooser", autoChooser);
+      configureBindings();
+
+      // Build an auto chooser. This will use Commands.none() as the default option.
+      autoChooser = AutoBuilder.buildAutoChooser("Test");
+      autoChooser.setDefaultOption("Default Path", null);
+      SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
