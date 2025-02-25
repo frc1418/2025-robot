@@ -51,7 +51,7 @@ public class FieldSpaceOdometry {
         this.pose = new Pose2d();
         this.poseEstimator = new SwerveDrivePoseEstimator(
             DrivetrainConstants.SWERVE_KINEMATICS, new Rotation2d(0), modulePositions, pose,
-            VecBuilder.fill(0.05, 0.05, 0),
+            VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
             VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
     }
 
@@ -152,7 +152,7 @@ public class FieldSpaceOdometry {
 
             if (!rejectVision) {
                 if (megaTag2) {
-                    poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+                    poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
                     poseEstimator.addVisionMeasurement(
                         poseFromAprilTags.pose,
                         poseFromAprilTags.timestampSeconds
@@ -161,7 +161,7 @@ public class FieldSpaceOdometry {
                 else if (megaTag1) {
                     LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
                     if (limelightMeasurement.tagCount >= 2) {  // Only trust measurement if we see multiple tags
-                        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
+                        poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(0.5, 0.5, 9999999));
                         poseEstimator.addVisionMeasurement(
                             limelightMeasurement.pose,
                             limelightMeasurement.timestampSeconds
