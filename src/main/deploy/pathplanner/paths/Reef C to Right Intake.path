@@ -3,37 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.45,
-        "y": 1.2
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 2.7681499914805343,
-        "y": 2.4612197886232234
-      },
-      "isLocked": false,
-      "linkedName": "Right Intake"
-    },
-    {
-      "anchor": {
         "x": 3.611056954520089,
         "y": 2.803971644810267
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.168462051675459,
+        "y": 3.046145320186723
+      },
+      "isLocked": false,
+      "linkedName": "Reef C"
+    },
+    {
+      "anchor": {
+        "x": 1.45,
+        "y": 1.2
+      },
       "prevControl": {
-        "x": 2.3466519965125245,
-        "y": 1.8924242997911573
+        "x": 1.1704591827274102,
+        "y": 1.205092580425431
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef C"
+      "linkedName": "Right Intake"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.023766447368421054,
-      "rotationDegrees": 59.99999999999999
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -47,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -124.0
   },
   "reversed": false,
   "folder": "Right Auto Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -124.0
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }
