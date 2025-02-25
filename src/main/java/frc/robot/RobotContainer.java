@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
@@ -38,6 +39,8 @@ public class RobotContainer {
   private final AlignByFieldPose alignByAutoStart = new AlignByFieldPose(driveSubsystem, 17, 5, 0, 0.5, 0, 0.1, 3);
   private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
   private final AlignRot alignRot = new AlignRot(this, driveSubsystem, leftJoystick, 0);
+
+  private boolean manualMode = false;
   
   public RobotContainer() {
     configureBindings();
@@ -77,19 +80,26 @@ public class RobotContainer {
     rightJoystick.button(4).whileTrue(driveSubsystem.turtle());
 
     altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(-0.2));
-    altJoystick.button(2).whileTrue(intakeSubsystem.intakeOut());
+    altJoystick.button(2).whileTrue(pivotSubsytem.setPivot(-31));
     altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.2));
-    altJoystick.button(4).whileTrue(intakeSubsystem.intakeIn());
-    altJoystick.button(5).whileTrue(pivotSubsytem.pivot(0.075));
-    altJoystick.button(6).whileTrue(pivotSubsytem.pivot(-0.075));
+    altJoystick.button(4).whileTrue(pivotSubsytem.setPivot(36));
+    altJoystick.button(5).whileTrue(checkManualMode(
+      pivotSubsytem.pivot(0.075), 
+      Commands.parallel(
+        elevatorSubsystem.moveElevatorToHeight(0.222),
+        pivotSubsytem.setPivot(36))));
+    altJoystick.button(6).whileTrue(checkManualMode(
+      pivotSubsytem.pivot(-0.075), 
+      Commands.parallel(
+        elevatorSubsystem.moveElevatorToHeight(1.03),
+        pivotSubsytem.setPivot(-31))));    
+    altJoystick.button(8).onTrue(toggleManualMode());
     altJoystick.button(9).onTrue(climbSubsystem.toggleAttach());
     altJoystick.button(10).onTrue(climbSubsystem.toggleClimb());
     altJoystick.pov(0).whileTrue(elevatorSubsystem.moveElevatorToHeight(1.01));
-    altJoystick.pov(90).whileTrue(pivotSubsytem.setPivot(0));
-    altJoystick.pov(90).onFalse(pivotSubsytem.resetPivotPID());
+    altJoystick.pov(90).whileTrue(intakeSubsystem.intakeIn());
     altJoystick.pov(180).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
-    altJoystick.pov(270).whileTrue(pivotSubsytem.setPivot(36));
-    altJoystick.pov(270).onFalse(pivotSubsytem.resetPivotPID());
+    altJoystick.pov(270).whileTrue(intakeSubsystem.intakeOut());
   }
 
   public double applyDeadband(double input, double deadband) {
@@ -101,6 +111,27 @@ public class RobotContainer {
 
   public void resetLockRot() {
     driveSubsystem.resetLockRot();
+  }
+
+  public Command toggleManualMode() {
+    return Commands.runOnce(() -> {
+      manualMode = !manualMode;
+      System.out.println("Manual mode: " + manualMode);
+    });
+  }
+
+  public Command checkManualMode(Command manualCommand, Command autoCommand) {
+    return new RunCommand(() -> {
+      if (manualMode) {
+        manualCommand.schedule();
+      }
+      else {
+        autoCommand.schedule();
+      }
+    }).finallyDo(interupted -> {
+      manualCommand.cancel();
+      autoCommand.cancel();
+    });
   }
 
   public Command getAutonomousCommand() {
