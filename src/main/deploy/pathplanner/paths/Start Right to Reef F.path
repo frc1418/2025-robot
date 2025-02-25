@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.331773741996017,
-        "y": 1.9673905019823763
+        "x": 7.310764060850582,
+        "y": 1.9378418577364491
       },
       "isLocked": false,
       "linkedName": null
@@ -20,12 +20,12 @@
         "y": 2.2823133196149548
       },
       "prevControl": {
-        "x": 6.464597401153924,
-        "y": 1.9138842602757902
+        "x": 6.2457604753218785,
+        "y": 2.200718192605479
       },
       "nextControl": {
-        "x": 5.815134858305898,
-        "y": 2.4396069694253946
+        "x": 5.691896203850256,
+        "y": 2.3919614694770197
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 2.75
       },
       "prevControl": {
-        "x": 5.140572197238432,
-        "y": 2.8871143428664676
+        "x": 5.116512039271152,
+        "y": 2.9776136947640617
       },
       "nextControl": null,
       "isLocked": false,
@@ -75,7 +75,7 @@
   "folder": "Right Auto Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
