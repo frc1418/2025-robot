@@ -14,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PivotConstants;
@@ -56,9 +57,24 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public void setPivotLocation(double posDegrees) {
-    double force = -pivotController.calculate(pivotMotor.getPosition().getValueAsDouble()*360, posDegrees);
-    force = -(PivotConstants.kG*Math.cos(pivotMotor.getPosition().getValueAsDouble()*Math.PI*2)+PivotConstants.kConstant);
-    pivotMotor.set(force);
+    double force = maintainAngle(posDegrees);
+
+    double error = posDegrees - pivotValue*360;
+    System.out.println("error: " + error);
+    if (error < 0.25) {
+      pivotMotor.set(force);
+      resetPivotPID();
+    }
+    else {
+      force -= pivotController.calculate(pivotValue*360, posDegrees);
+      force -= Math.signum(error) * PivotConstants.kV;
+      System.out.println("force: " + force);
+      System.out.println("PID: " + force);
+      if (Math.abs(force) > 0.1) {
+        force = Math.signum(force)*0.1;
+      }
+      pivotMotor.set(force);
+    }
   }
 
   public void resetPivot() {
@@ -68,9 +84,6 @@ public class PivotSubsystem extends SubsystemBase {
   public void updatePivot() {
     double rawPosition = pivotEncoder.get();
     double deltaPivot = rawPosition - lastPivot;
-    // System.out.println("delta pivot: " + deltaPivot);
-    // System.out.println("last pivot: " + lastPivot);
-    // System.out.println("initial pivot:" + initialPivot);
     while (deltaPivot < -0.5) {
       deltaPivot += 1;
     }
@@ -79,9 +92,7 @@ public class PivotSubsystem extends SubsystemBase {
     }
     lastPivot += deltaPivot;
     double normalizedPivot = lastPivot/encoderScalar;
-    // System.out.println("normalized pivot: " + normalizedPivot);
     pivotValue = normalizedPivot - initialPivot;
-    // System.out.println("pivot value: " + pivotValue);
     ntPivotAmount.setDouble(pivotValue*360);
   }
 
@@ -98,22 +109,37 @@ public class PivotSubsystem extends SubsystemBase {
     return pivotValue*360;
   }
 
-  public double maintainAngle() {
-    double force = -(PivotConstants.kConstant+kG*Math.cos(pivotValue*2*Math.PI));
+  public double maintainAngle(double pivotDegrees) {
+    double force = -(PivotConstants.kConstant+kG*Math.cos(pivotDegrees*2*Math.PI));
     return force;
   }
 
   public Command holdPivot() {
     return new RunCommand(
       () -> {
-        pivotMotor.set(maintainAngle());
+        pivotMotor.set(maintainAngle(pivotValue));
       }, this);
   }
 
   public Command pivot(double speed) {
     return new RunCommand(
       () -> {
-        pivotMotor.set(speed+maintainAngle());
+        pivotMotor.set(speed+maintainAngle(pivotValue));
+      }, this);
+  }
+
+  public Command setPivot(double pivotDegrees) {
+    return new RunCommand(
+      () -> {
+        setPivotLocation(pivotDegrees);
+      }, this);
+  }
+
+  public Command resetPivotPID() {
+    return Commands.runOnce(
+      () -> {
+        pivotController.reset();
+        System.out.println("reset");
       }, this);
   }
 
