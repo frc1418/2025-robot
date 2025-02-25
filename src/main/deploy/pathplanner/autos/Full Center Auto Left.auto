@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Center to Reef G"
+            "pathName": "Start Center to Reef H"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef G to Right Intake"
+            "pathName": "Reef H to Left Intake"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Intake to Reef B"
+            "pathName": "Left Intake to Reef A"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef B to Right Intake"
+            "pathName": "Reef A to Left Intake"
           }
         }
       ]

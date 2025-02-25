@@ -8,11 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.476656928643876,
-        "y": 4.898298792120913
+        "x": 5.4014164259150155,
+        "y": 4.955344423431376
       },
       "isLocked": false,
       "linkedName": "Reef I"
+    },
+    {
+      "anchor": {
+        "x": 5.35,
+        "y": 5.804718453543526
+      },
+      "prevControl": {
+        "x": 5.5907991418547915,
+        "y": 5.681104371123759
+      },
+      "nextControl": {
+        "x": 3.573179506706107,
+        "y": 6.71684809491746
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +36,8 @@
         "y": 6.945256260463169
       },
       "prevControl": {
-        "x": 1.0983772797673135,
-        "y": 7.08196368274748
+        "x": 0.9548988019643573,
+        "y": 6.966636691660528
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +46,18 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 1.1,
+        "y": 7.6
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 1.1166095890410956,
+      "maxWaypointRelativePos": 1.425749143835616,
+      "name": "Point Towards Zone"
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.5,

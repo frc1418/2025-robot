@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.168462051675459,
-        "y": 3.046145320186723
+        "x": 3.856982112809389,
+        "y": 2.848925137671032
       },
       "isLocked": false,
       "linkedName": "Reef C"
@@ -20,15 +20,20 @@
         "y": 1.2
       },
       "prevControl": {
-        "x": 1.1704591827274102,
-        "y": 1.205092580425431
+        "x": 1.0295183542442965,
+        "y": 0.9169424146550615
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Right Intake"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.19530370213963963,
+      "rotationDegrees": -124.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],

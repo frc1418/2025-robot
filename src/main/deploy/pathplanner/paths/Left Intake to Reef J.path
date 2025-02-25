@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.540063407752859,
-        "y": 6.782936954803796
+        "x": 1.4956116493473361,
+        "y": 6.742092456365739
       },
       "isLocked": false,
       "linkedName": "Left Intake"
@@ -20,15 +20,20 @@
         "y": 5.384
       },
       "prevControl": {
-        "x": 4.616872381342122,
-        "y": 5.500859592650643
+        "x": 4.119532146248085,
+        "y": 5.896735967955439
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Reef J"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.12580940315315314,
+      "rotationDegrees": -50.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],

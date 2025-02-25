@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.708587773330906,
-        "y": 1.5644804559007832
+        "x": 1.7050788193063002,
+        "y": 1.6301151556571918
       },
       "isLocked": false,
       "linkedName": "Right Intake"
@@ -20,8 +20,8 @@
         "y": 3.889981951032366
       },
       "prevControl": {
-        "x": 2.8474468311195342,
-        "y": 3.609218830419601
+        "x": 2.9178576655655744,
+        "y": 3.6745289693267313
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,18 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "pointTowardsZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 3.75,
+        "y": 3.5
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.11284246575342466,
+      "maxWaypointRelativePos": 0.5632919520547945,
+      "name": "Point Towards Zone"
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.5,
