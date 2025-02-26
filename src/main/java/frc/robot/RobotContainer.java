@@ -8,6 +8,12 @@ import frc.robot.commands.AlignByFieldPose;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.AlignByAprilTagLL;
 import frc.robot.commands.AlignRot;
+import frc.robot.commands.DeliverL1;
+import frc.robot.commands.DeliverL2;
+import frc.robot.commands.DeliverL3;
+import frc.robot.commands.DeliverL4;
+import frc.robot.commands.Intake;
+import frc.robot.commands.ResetSubystems;
 import frc.robot.subsystems.ClimbSubsystem;  
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -15,6 +21,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,10 +44,18 @@ public class RobotContainer {
   CommandJoystick rightJoystick = new CommandJoystick(1);
   CommandJoystick altJoystick = new CommandJoystick(2);
 
-  private final AlignByFieldPose alignByCoralStation = new AlignByFieldPose(driveSubsystem, 16.177, 6.273, 56.7, 0.5, 0, 0.1, 3);
   private final AlignByFieldPose alignByAutoStart = new AlignByFieldPose(driveSubsystem, 17, 5, 0, 0.5, 0, 0.1, 3);
   private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
+  private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
+  private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
   private final AlignRot alignRot = new AlignRot(this, driveSubsystem, leftJoystick, 0);
+
+  private final DeliverL4 deliverL4 = new DeliverL4(pivotSubsytem, elevatorSubsystem);
+  private final DeliverL3 deliverL3 = new DeliverL3(pivotSubsytem, elevatorSubsystem);
+  private final DeliverL2 deliverL2 = new DeliverL2(pivotSubsytem, elevatorSubsystem);
+  private final DeliverL1 deliverL1 = new DeliverL1(pivotSubsytem, elevatorSubsystem);
+  private final Intake intake = new Intake(pivotSubsytem, elevatorSubsystem, intakeSubsystem);
+  private final ResetSubystems resetSubystems = new ResetSubystems(pivotSubsytem, elevatorSubsystem);
 
   private boolean manualMode = false;
   
@@ -48,9 +63,16 @@ public class RobotContainer {
       NamedCommands.registerCommand("elevatorIntake", elevatorSubsystem.moveElevatorToHeight(0.222));
       NamedCommands.registerCommand("elevatorDeliver", elevatorSubsystem.moveElevatorToHeight(1.01));
       NamedCommands.registerCommand("pivotIntake", pivotSubsytem.setPivot(36));
-      NamedCommands.registerCommand("pivotDeliver", pivotSubsytem.setPivot(0));
+      NamedCommands.registerCommand("pivotDeliver", pivotSubsytem.setPivot(-31));
       NamedCommands.registerCommand("intakeIn", intakeSubsystem.intakeIn());
       NamedCommands.registerCommand("intakeOut", intakeSubsystem.intakeOut());
+
+      new EventTrigger("elevatorIntake").whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
+      new EventTrigger("elevatorDeliver").whileTrue(elevatorSubsystem.moveElevatorToHeight(1.03));
+      new EventTrigger("pivotIntake").whileTrue(pivotSubsytem.setPivot(36));
+      new EventTrigger("pivotDeliver").whileTrue(pivotSubsytem.setPivot(-31));
+      new EventTrigger("intakeIn").whileTrue(intakeSubsystem.intakeIn());
+      new EventTrigger("intakeOut").whileTrue(intakeSubsystem.intakeOut());
 
       configureBindings();
 
@@ -75,8 +97,8 @@ public class RobotContainer {
 
     leftJoystick.button(1).onTrue(driveSubsystem.setTempSlowMode(true));
     leftJoystick.button(1).onFalse(driveSubsystem.setTempSlowMode(false));
-    leftJoystick.button(2).whileTrue(alignByCoralStation);
-    leftJoystick.button(3).whileTrue(alignByAprilTagLL);
+    leftJoystick.button(2).whileTrue(alignByRightIntake);
+    leftJoystick.button(3).whileTrue(alignByReefB);
     leftJoystick.button(4).whileTrue(alignByAutoStart);
     leftJoystick.button(5).onTrue(driveSubsystem.toggleFieldCentric());
     leftJoystick.button(6).onTrue(driveSubsystem.toggleFastMode());
@@ -88,27 +110,27 @@ public class RobotContainer {
     rightJoystick.button(3).onFalse(driveSubsystem.correctError());
     rightJoystick.button(4).whileTrue(driveSubsystem.turtle());
 
-    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(-0.2));
-    altJoystick.button(2).whileTrue(pivotSubsytem.setPivot(-31));
-    altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.2));
-    altJoystick.button(4).whileTrue(pivotSubsytem.setPivot(36));
+    altJoystick.button(1).whileTrue(checkManualMode(
+      elevatorSubsystem.runElevator(-0.2), 
+      deliverL1));
+    altJoystick.button(2).whileTrue(checkManualMode(
+      Commands.print(""), 
+      deliverL2));
+    altJoystick.button(3).whileTrue(checkManualMode(
+      elevatorSubsystem.runElevator(0.2), 
+      deliverL3));
+    altJoystick.button(4).whileTrue(checkManualMode(
+      Commands.print(""), 
+      resetSubystems));
     altJoystick.button(5).whileTrue(checkManualMode(
-      pivotSubsytem.pivot(0.075), 
-      Commands.parallel(
-        elevatorSubsystem.moveElevatorToHeight(0.222),
-        pivotSubsytem.setPivot(36))));
+      pivotSubsytem.pivot(0.075),
+      intake));
     altJoystick.button(6).whileTrue(checkManualMode(
       pivotSubsytem.pivot(-0.075), 
-      Commands.parallel(
-        elevatorSubsystem.moveElevatorToHeight(1.03),
-        pivotSubsytem.setPivot(-31))));    
+      deliverL4));
     altJoystick.button(8).onTrue(toggleManualMode());
     altJoystick.button(9).onTrue(climbSubsystem.toggleAttach());
     altJoystick.button(10).onTrue(climbSubsystem.toggleClimb());
-    altJoystick.pov(0).whileTrue(elevatorSubsystem.moveElevatorToHeight(1.01));
-    altJoystick.pov(90).whileTrue(intakeSubsystem.intakeIn());
-    altJoystick.pov(180).whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
-    altJoystick.pov(270).whileTrue(intakeSubsystem.intakeOut());
   }
 
   public double applyDeadband(double input, double deadband) {
@@ -131,10 +153,10 @@ public class RobotContainer {
 
   public Command checkManualMode(Command manualCommand, Command autoCommand) {
     return new RunCommand(() -> {
-      if (manualMode) {
+      if (manualMode & !manualCommand.isScheduled()) {
         manualCommand.schedule();
       }
-      else {
+      else if (!manualMode & !autoCommand.isScheduled()){
         autoCommand.schedule();
       }
     }).finallyDo(interupted -> {
