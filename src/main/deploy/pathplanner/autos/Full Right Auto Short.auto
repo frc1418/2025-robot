@@ -11,9 +11,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "deliverL4"
           }
         },
         {
@@ -23,9 +23,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "intake"
           }
         },
         {
@@ -35,9 +35,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "deliverL4"
           }
         },
         {
@@ -47,9 +47,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "intake"
           }
         },
         {
@@ -59,9 +59,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "deliverL4"
           }
         },
         {
@@ -71,15 +71,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "intake"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Right Intake to Reef B"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deliverL4"
           }
         }
       ]

@@ -5,18 +5,26 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class DeliverL1 extends SequentialCommandGroup {
-  public DeliverL1(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem) {
+  public DeliverL1(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem) {
     addCommands(
+      Commands.deadline(
+          Commands.waitSeconds(3), 
+          pivotSubsystem.setPivot(65),
+          elevatorSubsystem.moveElevatorToHeight(0.25)),
+      Commands.deadline(
+        Commands.waitSeconds(1.2),
+        pivotSubsystem.setPivot(-40),
         Commands.deadline(
-            Commands.waitSeconds(3), 
-            pivotSubsystem.setPivot(65),
-            elevatorSubsystem.moveElevatorToHeight(0.2)),
-        pivotSubsystem.setPivot(-40)
+          Commands.waitSeconds(1), 
+          intakeSubsystem.intakeOut()
+        )
+      )
     );
   }
 }

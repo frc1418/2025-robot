@@ -13,12 +13,13 @@ public class ResetSubystems extends SequentialCommandGroup {
   public ResetSubystems(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem) {
     addCommands(
         Commands.deadline(
-            Commands.waitSeconds(3), 
+            Commands.waitSeconds(1), 
             pivotSubsystem.setPivot(65),
             elevatorSubsystem.moveElevatorToHeight(0.2)),
-        Commands.parallel(
+        Commands.deadline(
+            Commands.waitSeconds(0.5),
             pivotSubsystem.setPivot(95),
-            elevatorSubsystem.moveElevatorToHeight(0))
+            elevatorSubsystem.moveElevatorToHeight(-0.05))
     );
   }
 }
