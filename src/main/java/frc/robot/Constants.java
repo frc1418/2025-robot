@@ -117,6 +117,7 @@ public final class Constants {
     public final static double maxCorrectiveAngularSpeed = Math.PI;
     public final static double correctiveFactor = 0.16;
     public final static double baseCorrector = 0.04;
+    public final static double armOffset = 0.1651;
   }
 
   public final static class WheelConstants {

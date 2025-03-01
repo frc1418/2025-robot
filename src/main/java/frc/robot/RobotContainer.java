@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.commands.AlignByFieldPose;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.commands.AlignByAprilTagLL;
 import frc.robot.commands.AlignRot;
 import frc.robot.commands.DeliverL1;
 import frc.robot.commands.DeliverL2;
@@ -14,6 +13,7 @@ import frc.robot.commands.DeliverL3;
 import frc.robot.commands.DeliverL4;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Reset;
+import frc.robot.commands.AlignByFieldPose.AlignDirection;
 import frc.robot.subsystems.ClimbSubsystem;  
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -45,10 +45,11 @@ public class RobotContainer {
   CommandJoystick rightJoystick = new CommandJoystick(1);
   CommandJoystick altJoystick = new CommandJoystick(2);
 
-  private final AlignByFieldPose alignByAutoStart = new AlignByFieldPose(driveSubsystem, 17, 5, 0, 0.5, 0, 0.1, 3);
-  private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
-  private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
-  private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
+  // private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
+  // private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
+  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.LEFT);
+  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
+  // private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
   private final AlignRot alignRot = new AlignRot(this, driveSubsystem, leftJoystick, 0);
 
   private final DeliverL4 deliverL4;
@@ -117,9 +118,9 @@ public class RobotContainer {
 
     leftJoystick.button(1).onTrue(driveSubsystem.setTempSlowMode(true));
     leftJoystick.button(1).onFalse(driveSubsystem.setTempSlowMode(false));
-    leftJoystick.button(2).whileTrue(alignByRightIntake);
-    leftJoystick.button(3).whileTrue(alignByReefB);
-    leftJoystick.button(4).whileTrue(alignByAutoStart);
+    // leftJoystick.button(2).whileTrue(alignByRightIntake);
+    leftJoystick.button(3).whileTrue(alignByReefLeft);
+    leftJoystick.button(4).whileTrue(alignByReefRight);
     leftJoystick.button(5).onTrue(driveSubsystem.toggleFieldCentric());
     leftJoystick.button(6).onTrue(driveSubsystem.toggleFastMode());
     leftJoystick.button(7).onTrue(driveSubsystem.toggleLimitDrive());
