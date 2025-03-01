@@ -8,9 +8,9 @@
     "Center Auto Paths"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 1.5,
+  "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
-  "defaultMaxAngVel": 90.0,
+  "defaultMaxAngVel": 360.0,
   "defaultMaxAngAccel": 360.0,
   "defaultNominalVoltage": 12.0,
   "robotMass": 67.31,

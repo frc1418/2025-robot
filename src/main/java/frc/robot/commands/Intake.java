@@ -7,17 +7,35 @@ package frc.robot.commands;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class Intake extends SequentialCommandGroup {
-  public Intake(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem) {
+  public Intake(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, RobotBase robot) {
     addCommands(
-        Commands.deadline(
-            Commands.waitUntil(intakeSubsystem::getHasCoral), 
-            pivotSubsystem.setPivot(36),
-            elevatorSubsystem.moveElevatorToHeight(0.222),
-            intakeSubsystem.intakeIn())
+      Commands.deadline(
+        Commands.waitUntil(intakeSubsystem::getHasCoral), 
+        pivotSubsystem.setPivot(36),
+        elevatorSubsystem.moveElevatorToHeight(0.222),
+        intakeSubsystem.intakeIn()),
+      Commands.deadline(
+        Commands.waitUntil(pivotSubsystem::isSafe), 
+        pivotSubsystem.setPivot(61.5),
+        elevatorSubsystem.smoothControl()),
+      Commands.deadline(
+        Commands.waitUntil(elevatorSubsystem::isMiddle), 
+        pivotSubsystem.setPivot(61.5),
+        elevatorSubsystem.moveElevatorToHeight(0.2)),
+      Commands.deadline(
+        Commands.waitUntil(elevatorSubsystem::isKindaLow), 
+        pivotSubsystem.setPivot(95),
+        elevatorSubsystem.moveElevatorToHeight(0.2)),
+      Commands.deadline(
+        Commands.waitUntil(elevatorSubsystem::isLow),
+        pivotSubsystem.setPivot(95),
+        elevatorSubsystem.moveElevatorToHeight(-0.05)),
+      Commands.waitUntil(robot::isAutonomous)    
     );
   }
 }

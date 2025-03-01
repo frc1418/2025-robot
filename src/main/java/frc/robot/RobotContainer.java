@@ -13,7 +13,7 @@ import frc.robot.commands.DeliverL2;
 import frc.robot.commands.DeliverL3;
 import frc.robot.commands.DeliverL4;
 import frc.robot.commands.Intake;
-import frc.robot.commands.ResetSubystems;
+import frc.robot.commands.Reset;
 import frc.robot.subsystems.ClimbSubsystem;  
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -23,6 +23,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,48 +51,55 @@ public class RobotContainer {
   private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
   private final AlignRot alignRot = new AlignRot(this, driveSubsystem, leftJoystick, 0);
 
-  private final DeliverL4 deliverL4 = new DeliverL4(pivotSubsytem, elevatorSubsystem, intakeSubsystem);
-  private final DeliverL3 deliverL3 = new DeliverL3(pivotSubsytem, elevatorSubsystem, intakeSubsystem);
-  private final DeliverL2 deliverL2 = new DeliverL2(pivotSubsytem, elevatorSubsystem, intakeSubsystem);
-  private final DeliverL1 deliverL1 = new DeliverL1(pivotSubsytem, elevatorSubsystem, intakeSubsystem);
-  private final Intake intake = new Intake(pivotSubsytem, elevatorSubsystem, intakeSubsystem);
-  private final ResetSubystems resetSubystems = new ResetSubystems(pivotSubsytem, elevatorSubsystem);
+  private final DeliverL4 deliverL4;
+  private final DeliverL3 deliverL3;
+  private final DeliverL2 deliverL2;
+  private final DeliverL1 deliverL1;
+  private final Intake intake;
+  private final Reset reset;
 
-  private boolean manualMode = false;
+  private Boolean manualMode = false;
   
-  public RobotContainer() {
-      NamedCommands.registerCommand("elevatorIntake", elevatorSubsystem.moveElevatorToHeight(0.222));
-      NamedCommands.registerCommand("elevatorDeliver", elevatorSubsystem.moveElevatorToHeight(1.01));
-      NamedCommands.registerCommand("pivotIntake", pivotSubsytem.setPivot(36));
-      NamedCommands.registerCommand("pivotDeliver", pivotSubsytem.setPivot(-31));
-      NamedCommands.registerCommand("intakeIn", intakeSubsystem.intakeIn());
-      NamedCommands.registerCommand("intakeOut", intakeSubsystem.intakeOut());
-      NamedCommands.registerCommand("deliverL1", deliverL1);
-      NamedCommands.registerCommand("deliverL2", deliverL2);
-      NamedCommands.registerCommand("deliverL3", deliverL3);
-      NamedCommands.registerCommand("deliverL4", deliverL4);
-      NamedCommands.registerCommand("intake", intake);
-      NamedCommands.registerCommand("resetSubystems", resetSubystems);
+  public RobotContainer(RobotBase robot) {
+    deliverL4 = new DeliverL4(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
+    deliverL3 = new DeliverL3(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
+    deliverL2 = new DeliverL2(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
+    deliverL1 = new DeliverL1(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
+    intake = new Intake(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
+    reset = new Reset(pivotSubsytem, elevatorSubsystem, robot);
 
-      new EventTrigger("elevatorIntake").whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
-      new EventTrigger("elevatorDeliver").whileTrue(elevatorSubsystem.moveElevatorToHeight(1.03));
-      new EventTrigger("pivotIntake").whileTrue(pivotSubsytem.setPivot(36));
-      new EventTrigger("pivotDeliver").whileTrue(pivotSubsytem.setPivot(-31));
-      new EventTrigger("intakeIn").whileTrue(intakeSubsystem.intakeIn());
-      new EventTrigger("intakeOut").whileTrue(intakeSubsystem.intakeOut());
-      new EventTrigger("deliverL1").whileTrue(deliverL1);
-      new EventTrigger("deliverL2").whileTrue(deliverL2);
-      new EventTrigger("deliverL3").whileTrue(deliverL3);
-      new EventTrigger("deliverL4").whileTrue(deliverL4);
-      new EventTrigger("intake").whileTrue(intake);
-      new EventTrigger("resetSubystems").whileTrue(resetSubystems);
+    NamedCommands.registerCommand("elevatorIntake", elevatorSubsystem.moveElevatorToHeight(0.222));
+    NamedCommands.registerCommand("elevatorDeliver", elevatorSubsystem.moveElevatorToHeight(1.01));
+    NamedCommands.registerCommand("pivotIntake", pivotSubsytem.setPivot(36));
+    NamedCommands.registerCommand("pivotDeliver", pivotSubsytem.setPivot(-31));
+    NamedCommands.registerCommand("intakeIn", intakeSubsystem.intakeIn());
+    NamedCommands.registerCommand("intakeOut", intakeSubsystem.intakeOut());
+    NamedCommands.registerCommand("deliverL1", deliverL1);
+    NamedCommands.registerCommand("deliverL2", deliverL2);
+    NamedCommands.registerCommand("deliverL3", deliverL3);
+    NamedCommands.registerCommand("deliverL4", deliverL4);
+    NamedCommands.registerCommand("intake", intake);
+    NamedCommands.registerCommand("reset", reset);
 
-      configureBindings();
+    new EventTrigger("elevatorIntake").whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
+    new EventTrigger("elevatorDeliver").whileTrue(elevatorSubsystem.moveElevatorToHeight(1.03));
+    new EventTrigger("pivotIntake").whileTrue(pivotSubsytem.setPivot(36));
+    new EventTrigger("pivotDeliver").whileTrue(pivotSubsytem.setPivot(-31));
+    new EventTrigger("intakeIn").whileTrue(intakeSubsystem.intakeIn());
+    new EventTrigger("intakeOut").whileTrue(intakeSubsystem.intakeOut());
+    new EventTrigger("deliverL1").whileTrue(deliverL1);
+    new EventTrigger("deliverL2").whileTrue(deliverL2);
+    new EventTrigger("deliverL3").whileTrue(deliverL3);
+    new EventTrigger("deliverL4").whileTrue(deliverL4);
+    new EventTrigger("intake").whileTrue(intake);
+    new EventTrigger("reset").whileTrue(reset);
 
-      // Build an auto chooser. This will use Commands.none() as the default option.
-      autoChooser = AutoBuilder.buildAutoChooser("Test");
-      autoChooser.setDefaultOption("Default Path", null);
-      SmartDashboard.putData("Auto Chooser", autoChooser);
+    configureBindings();
+
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser("Test");
+    autoChooser.setDefaultOption("Default Path", null);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -104,7 +112,7 @@ public class RobotContainer {
     }, driveSubsystem));
 
     elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdElevator());
-    pivotSubsytem.setDefaultCommand(pivotSubsytem.holdPivot());
+    // pivotSubsytem.setDefaultCommand(pivotSubsytem.holdPivot());
     intakeSubsystem.setDefaultCommand(intakeSubsystem.holdIntake());
 
     leftJoystick.button(1).onTrue(driveSubsystem.setTempSlowMode(true));
@@ -133,7 +141,7 @@ public class RobotContainer {
       deliverL3));
     altJoystick.button(4).whileTrue(checkManualMode(
       Commands.print(""), 
-      resetSubystems));
+      reset));
     altJoystick.button(5).whileTrue(checkManualMode(
       pivotSubsytem.pivot(0.075),
       intake));

@@ -80,6 +80,22 @@ public class ElevatorSubsystem extends SubsystemBase {
       }, this);
   }
 
+  public double getHeight() {
+    return heightValue;
+  }
+
+  public Boolean isMiddle() {
+    return heightValue < 0.57;
+  }
+
+  public Boolean isKindaLow() {
+    return heightValue < 0.3;
+  }
+
+  public Boolean isLow() {
+    return heightValue < 0.03;
+  }
+
   public void moveElevator(double speed) {
     speed = speedLimiter.calculate(speed);
     motor1.set(speed);
@@ -95,12 +111,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     else {
       speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+kG;
     }
-    if (Math.abs(speed) > 0.75) {
+    if (Math.abs(speed) > ElevatorConstants.maxSpeed) {
       System.out.println("TRYING TO GO: " + speed);
-      speed = Math.signum(speed)*0.75;
+      speed = Math.signum(speed)*ElevatorConstants.maxSpeed;
     }
     moveElevator(speed);
-    System.out.println("Height: " + heightValue + " Error: " + error + " Speed: " + speed);
   }
 
   public void updateElevator() {
@@ -126,6 +141,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     else {
       kG = ElevatorConstants.kG;
     }
+  }
+
+  public Command smoothControl() {
+    return new RunCommand(() -> {
+      speedLimiter.reset(0.125);
+    });
   }
 
   @Override

@@ -70,12 +70,13 @@ public final class Constants {
     public final static double ENCODER_SCALAR = 4.43;
     public final static double ELEVATOR_OFFSET = 0.037;
 
+    public final static double maxSpeed = 0.6;
     public final static double kV = 0.12;
     public final static double kG = 0.125;
     public final static double kCoral = 0.025;
 
     public final static double kP = 0.725;
-    public final static double kD = 0.25;
+    public final static double kD = 0.2;
   }
 
   public final static class IntakeConstants {
@@ -91,12 +92,12 @@ public final class Constants {
     public static final double pivotTolerance = 0.5;
     public static final double kCoral = 0.01;
     public static final double kG = 0.02;
-    public static final double kConstant = 0.02;
+    public static final double kConstant = 0.025;
     public static final double kV = 0.0175;
 
     public final static double kP = 0.0015;
     public final static double kI = 0;
-    public final static double kD = 0.0005;
+    public final static double kD = 0;
   }
   public final static class PneumaticsConstants {
     public final static int PNEUMATICS_HUB_ID = 21;

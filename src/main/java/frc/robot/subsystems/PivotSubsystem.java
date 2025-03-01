@@ -65,14 +65,13 @@ public class PivotSubsystem extends SubsystemBase {
       resetPivotPID();
     }
     else {
-      System.out.println(pivotController.calculate(pivotValue*360, posDegrees));
       force -= pivotController.calculate(pivotValue*360, posDegrees);
       force -= Math.signum(error) * PivotConstants.kV;
-      System.out.println("force: " + force);
-      System.out.println("PID: " + force);
       if (Math.abs(force) > 0.1) {
         force = Math.signum(force)*0.1;
       }
+      System.out.println("error: " + error);
+      System.out.println("force: " + force);
       pivotMotor.set(force);
     }
   }
@@ -107,6 +106,10 @@ public class PivotSubsystem extends SubsystemBase {
 
   public double getPivotDegrees() {
     return pivotValue*360;
+  }
+
+  public Boolean isSafe() {
+    return (pivotValue*360<67 && pivotValue*360>57);
   }
 
   public double maintainAngle(double pivotDegrees) {
