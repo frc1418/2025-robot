@@ -18,6 +18,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -40,6 +41,7 @@ public class RobotContainer {
   private final PivotSubsystem pivotSubsytem = new PivotSubsystem(intakeSubsystem);
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(climbSubsystem);
+  private final LedSubsystem ledSubsystem = new LedSubsystem();
 
   CommandJoystick leftJoystick = new CommandJoystick(0);
   CommandJoystick rightJoystick = new CommandJoystick(1);
