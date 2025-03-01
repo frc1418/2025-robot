@@ -13,7 +13,7 @@ import frc.robot.Constants.LedColor;
 public class LedSubsystem extends SubsystemBase {
 
     public LedColor color;
-    private Spark blinkin = new Spark(8);
+    private Spark blinkin = new Spark(0);
 
     public LedSubsystem() {        
       setAllianceColor();
