@@ -18,6 +18,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import java.util.Set;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -36,6 +37,7 @@ public class RobotContainer {
   
   private final SendableChooser<Command> autoChooser;
 
+  private final LedSubsystem ledSubsystem = new LedSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(intakeSubsystem);
   private final PivotSubsystem pivotSubsytem = new PivotSubsystem(intakeSubsystem);
