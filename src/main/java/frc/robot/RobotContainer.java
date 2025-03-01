@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.commands.AlignByFieldPose;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.commands.AlignRot;
 import frc.robot.commands.DeliverL1;
 import frc.robot.commands.DeliverL2;
 import frc.robot.commands.DeliverL3;
@@ -14,11 +13,13 @@ import frc.robot.commands.DeliverL4;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Reset;
 import frc.robot.commands.AlignByFieldPose.AlignDirection;
+import frc.robot.commands.AlignRot;
 import frc.robot.subsystems.ClimbSubsystem;  
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
+import java.util.Set;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
@@ -49,8 +50,10 @@ public class RobotContainer {
   // private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
   private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.LEFT);
   private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
+  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
   // private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
-  private final AlignRot alignRot = new AlignRot(this, driveSubsystem, leftJoystick, 0);
+  private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
+  private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
 
   private final DeliverL4 deliverL4;
   private final DeliverL3 deliverL3;
@@ -116,20 +119,20 @@ public class RobotContainer {
     // pivotSubsytem.setDefaultCommand(pivotSubsytem.holdPivot());
     intakeSubsystem.setDefaultCommand(intakeSubsystem.holdIntake());
 
-    leftJoystick.button(1).onTrue(driveSubsystem.setTempSlowMode(true));
-    leftJoystick.button(1).onFalse(driveSubsystem.setTempSlowMode(false));
-    // leftJoystick.button(2).whileTrue(alignByRightIntake);
-    leftJoystick.button(3).whileTrue(alignByReefLeft);
-    leftJoystick.button(4).whileTrue(alignByReefRight);
+    leftJoystick.button(1).whileTrue(alignByReefLeft);
+    leftJoystick.button(2).onTrue(driveSubsystem.setTempSlowMode(true));
+    leftJoystick.button(2).onFalse(driveSubsystem.setTempSlowMode(false));
     leftJoystick.button(5).onTrue(driveSubsystem.toggleFieldCentric());
     leftJoystick.button(6).onTrue(driveSubsystem.toggleFastMode());
     leftJoystick.button(7).onTrue(driveSubsystem.toggleLimitDrive());
 
-    rightJoystick.button(1).whileTrue(alignRot);
+    rightJoystick.button(1).whileTrue(alignByReefRight);
     rightJoystick.button(2).onTrue(driveSubsystem.resetFieldCentric());
     rightJoystick.button(3).whileTrue(driveSubsystem.getRotError());
     rightJoystick.button(3).onFalse(driveSubsystem.correctError());
     rightJoystick.button(4).whileTrue(driveSubsystem.turtle());
+    rightJoystick.pov(0).whileTrue(alignRotForward);
+    rightJoystick.pov(180).whileTrue(alignRotBackward);
 
     altJoystick.button(1).whileTrue(checkManualMode(
       elevatorSubsystem.runElevator(-0.2), 
@@ -169,6 +172,20 @@ public class RobotContainer {
     return Commands.runOnce(() -> {
       manualMode = !manualMode;
       System.out.println("Manual mode: " + manualMode);
+    });
+  }
+
+  public Command checkAprilTagNumber(Command reefCommand, Command intakeCommand) {
+    return new RunCommand(() -> {
+      if (!intakeCommand.isScheduled() && Set.of(1, 2, 12, 13).contains(driveSubsystem.getAprilTagNumber())) {
+        intakeCommand.schedule();
+      }
+      else if (!reefCommand.isScheduled()){
+        reefCommand.schedule();
+      }
+    }).finallyDo(interupted -> {
+      reefCommand.cancel();
+      intakeCommand.cancel();
     });
   }
 

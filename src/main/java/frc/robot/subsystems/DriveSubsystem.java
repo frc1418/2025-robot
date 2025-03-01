@@ -277,6 +277,10 @@ public class DriveSubsystem extends SubsystemBase {
         this.fieldCentric = fieldCentric;
     }
 
+    public int getAprilTagNumber() {
+      return fieldOdometry.getAprilTagNumber();
+    }
+
     public boolean getFieldCentric() {
         return fieldCentric;
     }
