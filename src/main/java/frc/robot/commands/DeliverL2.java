@@ -6,14 +6,16 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class DeliverL2 extends SequentialCommandGroup {
-  public DeliverL2(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, RobotBase robot) {
+  public DeliverL2(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
     addCommands(
+      ledSubsystem.dontMoveColor(),
       Commands.deadline(
         Commands.waitSeconds(2), 
         pivotSubsystem.setPivot(65),
@@ -41,6 +43,7 @@ public class DeliverL2 extends SequentialCommandGroup {
         Commands.waitUntil(elevatorSubsystem::isLow),
         pivotSubsystem.setPivot(95),
         elevatorSubsystem.moveElevatorToHeight(-0.05)),
+      ledSubsystem.allianceColor(),
       Commands.waitUntil(robot::isAutonomous)    
     );
   }

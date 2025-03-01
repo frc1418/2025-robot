@@ -6,15 +6,17 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class DeliverL4 extends SequentialCommandGroup {
-  public DeliverL4(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, RobotBase robot) {
+  public DeliverL4(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
     addRequirements(pivotSubsystem, elevatorSubsystem, intakeSubsystem);
     addCommands(
+      ledSubsystem.dontMoveColor(),
       Commands.deadline(
         Commands.waitSeconds(2), 
         pivotSubsystem.setPivot(60),

@@ -38,7 +38,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   private final LedSubsystem ledSubsystem = new LedSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(ledSubsystem);
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem(intakeSubsystem);
   private final PivotSubsystem pivotSubsytem = new PivotSubsystem(intakeSubsystem);
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
@@ -50,9 +50,9 @@ public class RobotContainer {
 
   // private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
   // private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
-  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.LEFT);
-  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
-  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
+  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.LEFT);
+  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
+  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
   // private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
@@ -67,12 +67,12 @@ public class RobotContainer {
   private Boolean manualMode = false;
   
   public RobotContainer(RobotBase robot) {
-    deliverL4 = new DeliverL4(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
-    deliverL3 = new DeliverL3(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
-    deliverL2 = new DeliverL2(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
-    deliverL1 = new DeliverL1(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
-    intake = new Intake(pivotSubsytem, elevatorSubsystem, intakeSubsystem, robot);
-    reset = new Reset(pivotSubsytem, elevatorSubsystem, robot);
+    deliverL4 = new DeliverL4(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
+    deliverL3 = new DeliverL3(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
+    deliverL2 = new DeliverL2(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
+    deliverL1 = new DeliverL1(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
+    intake = new Intake(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
+    reset = new Reset(pivotSubsytem, elevatorSubsystem, ledSubsystem, robot);
 
     NamedCommands.registerCommand("elevatorIntake", elevatorSubsystem.moveElevatorToHeight(0.222));
     NamedCommands.registerCommand("elevatorDeliver", elevatorSubsystem.moveElevatorToHeight(1.01));
@@ -186,6 +186,7 @@ public class RobotContainer {
         reefCommand.schedule();
       }
     }).finallyDo(interupted -> {
+      ledSubsystem.allianceColor();
       reefCommand.cancel();
       intakeCommand.cancel();
     });
@@ -200,6 +201,7 @@ public class RobotContainer {
         autoCommand.schedule();
       }
     }).finallyDo(interupted -> {
+      ledSubsystem.allianceColor();
       manualCommand.cancel();
       autoCommand.cancel();
     });

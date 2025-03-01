@@ -26,6 +26,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final NetworkTableEntry ntHasCoral = table.getEntry("hasCoral");
 
+  private final LedSubsystem leds;
+
   private final SparkFlex intakeMotor = new SparkFlex(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
   private final SparkFlexConfig motorConfig = new SparkFlexConfig();
 
@@ -34,9 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
   private boolean hasCoral = false;
 
 
-  public IntakeSubsystem() {
+  public IntakeSubsystem(LedSubsystem leds) {
     motorConfig.idleMode(IdleMode.kBrake);
     intakeMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    this.leds = leds;
   }
 
   public Command holdIntake() {
@@ -73,9 +76,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     if (coralSwitch.get()) {
       hasCoral = true;
+      leds.setCoralInColor();
     }
     else {
       hasCoral = false;
+      leds.resetColor();
     }
     ntHasCoral.setBoolean(hasCoral);
   }

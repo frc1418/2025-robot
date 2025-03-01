@@ -114,10 +114,10 @@ public final class Constants {
 }
 
 public enum LedColor {
-  BALANCING(0.57), //PINK
-  DOCKED(0.77), //GREEN
-  GRABBER_OPEN(0.67), //GOLD
-  GRABBER_CLOSED(0.93), //WHITE 
+  DONT_MOVE(0.57), //PINK
+  CORAL_IN(0.77), //GREEN
+  ALIGNED(0.67), //GOLD
+  ALIGNING(0.93), //WHITE 
   BLUE_ALLIANCE(0.87), //BLUE
   RED_ALLIANCE(0.61); //RED
 

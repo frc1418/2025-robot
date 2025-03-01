@@ -8,9 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.common.FieldSpaceOdometry;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 
 public class AlignByFieldPose extends Command {
   DriveSubsystem swerveDrive;
+  LedSubsystem leds;
   FieldSpaceOdometry odometry;
 
   double targetX;
@@ -39,8 +41,9 @@ public class AlignByFieldPose extends Command {
   
   private AlignDirection side;
 
-  public AlignByFieldPose(DriveSubsystem swerveDrive, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel, AlignDirection side) {
+  public AlignByFieldPose(DriveSubsystem swerveDrive, LedSubsystem leds, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel, AlignDirection side) {
       this.swerveDrive = swerveDrive;
+      this.leds = leds;
       this.odometry = swerveDrive.getOdometry();
       this.initialSpeedP = P;
       this.sideOffset = sideOffset;
@@ -83,6 +86,7 @@ public class AlignByFieldPose extends Command {
         System.out.println("targetY: " + targetY);
         System.out.println("targetRot: " + targetRot);
         hasTargetPos = true;
+        leds.setAligningColor();
       }
   }
 
@@ -145,6 +149,7 @@ public class AlignByFieldPose extends Command {
         else {
             x = 0;
             y = 0;
+            leds.setAlignedColor();
         }
 
         swerveDrive.drive(x, y, rot);     
@@ -167,6 +172,7 @@ public class AlignByFieldPose extends Command {
     this.aligningTag = -1;
     hasTargetPos = false;
     swerveDrive.drive(0, 0, 0);
+    leds.setAllianceColor();
   }
 
   // Returns true when the command should end.
