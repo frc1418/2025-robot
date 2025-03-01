@@ -66,13 +66,15 @@ public class AlignByFieldPose extends Command {
       this.aligningTag = odometry.getAprilTagNumber();
 
       if (odometry.getClosestAprilTagPose().isPresent()) {
+        double newSideOffset = sideOffset;
         if (side == AlignDirection.LEFT) {
-          sideOffset *= -1 - DriverConstants.armOffset;
+          newSideOffset *= -1;
+          newSideOffset -= DriverConstants.armOffset;
         }
 
         double tagRotation = odometry.getClosestAprilTagPose().get().getRotation().toRotation2d().getDegrees();
-        double offsetX = backOffset * Math.cos(Math.toRadians(tagRotation)) - sideOffset * Math.sin(Math.toRadians(tagRotation));
-        double offsetY = backOffset * Math.sin(Math.toRadians(tagRotation)) + sideOffset * Math.cos(Math.toRadians(tagRotation));
+        double offsetX = backOffset * Math.cos(Math.toRadians(tagRotation)) - newSideOffset * Math.sin(Math.toRadians(tagRotation));
+        double offsetY = backOffset * Math.sin(Math.toRadians(tagRotation)) + newSideOffset * Math.cos(Math.toRadians(tagRotation));
 
         targetX = odometry.getClosestAprilTagPose().get().getX()+offsetX;
         targetY = odometry.getClosestAprilTagPose().get().getY()+offsetY;
@@ -89,13 +91,14 @@ public class AlignByFieldPose extends Command {
   public void execute() {
     if (!hasTargetPos) {
       if (odometry.getClosestAprilTagPose().isPresent()) {
+        double newSideOffset = sideOffset;
         if (side == AlignDirection.LEFT) {
-          sideOffset *= -1 - DriverConstants.armOffset;
+          newSideOffset *= -1 - DriverConstants.armOffset;
         }
 
         double tagRotation = odometry.getClosestAprilTagPose().get().getRotation().toRotation2d().getDegrees();
-        double offsetX = backOffset * Math.cos(Math.toRadians(tagRotation)) - sideOffset * Math.sin(Math.toRadians(tagRotation));
-        double offsetY = backOffset * Math.sin(Math.toRadians(tagRotation)) + sideOffset * Math.cos(Math.toRadians(tagRotation));
+        double offsetX = backOffset * Math.cos(Math.toRadians(tagRotation)) - newSideOffset * Math.sin(Math.toRadians(tagRotation));
+        double offsetY = backOffset * Math.sin(Math.toRadians(tagRotation)) + newSideOffset * Math.cos(Math.toRadians(tagRotation));
 
         targetX = odometry.getClosestAprilTagPose().get().getX()+offsetX;
         targetY = odometry.getClosestAprilTagPose().get().getY()+offsetY;
