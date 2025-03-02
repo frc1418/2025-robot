@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.35,
-        "y": 2.75
+        "x": 5.368832103587962,
+        "y": 2.8270500578703697
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.299765485401813,
-        "y": 2.36389677469791
+        "x": 5.26324793245715,
+        "y": 2.6004402990191244
       },
       "isLocked": false,
       "linkedName": "Reef F"
@@ -20,31 +20,36 @@
         "y": 2.1264019097222215
       },
       "prevControl": {
-        "x": 5.558340644130531,
-        "y": 2.8847862001348332
+        "x": 5.379870154636201,
+        "y": 2.673022974905616
       },
       "nextControl": {
-        "x": 4.043602070893157,
-        "y": 1.0901616380921755
+        "x": 4.311668832729985,
+        "y": 1.4081754484302835
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.45,
-        "y": 1.2
+        "x": 1.2635883246527766,
+        "y": 1.209363425925925
       },
       "prevControl": {
-        "x": 1.2074705011388276,
-        "y": 1.2606584057006829
+        "x": 0.9298702248729982,
+        "y": 1.2302010401172805
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Right Intake"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.16194490131578945,
+      "rotationDegrees": -124.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [
     {
@@ -53,17 +58,17 @@
         "y": 0.5
       },
       "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.04241071428571423,
+      "minWaypointRelativePos": 0.01,
       "maxWaypointRelativePos": 1.3384811046511627,
       "name": "Point Towards Zone"
     }
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.5,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 360.0,
-    "maxAngularAcceleration": 360.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -72,7 +77,7 @@
     "rotation": -124.0
   },
   "reversed": false,
-  "folder": "Right Auto Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 119.99999999999999
