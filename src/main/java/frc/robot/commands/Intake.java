@@ -19,15 +19,16 @@ public class Intake extends SequentialCommandGroup {
       Commands.deadline(
         Commands.waitUntil(intakeSubsystem::getHasCoral), 
         pivotSubsystem.setPivot(36),
-        elevatorSubsystem.moveElevatorToHeight(0.222),
+        elevatorSubsystem.moveElevatorToHeight(0.235),
         intakeSubsystem.intakeIn()),
       Commands.deadline(
         Commands.waitUntil(pivotSubsystem::isSafe), 
-        pivotSubsystem.setPivot(61.5),
-        elevatorSubsystem.smoothControl()),
+        pivotSubsystem.setPivot(70),
+        elevatorSubsystem.smoothControl(),
+        intakeSubsystem.holdIntake()),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isMiddle), 
-        pivotSubsystem.setPivot(61.5),
+        pivotSubsystem.setPivot(70),
         elevatorSubsystem.moveElevatorToHeight(0.2)),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isKindaLow), 

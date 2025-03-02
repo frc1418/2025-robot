@@ -12,7 +12,7 @@ public final class Configs {
 
         static {
             speedConfig
-                .idleMode(IdleMode.kCoast)
+                .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(50);
             speedConfig.encoder
                 .positionConversionFactor(WheelConstants.ROTATIONS_TO_METERS)
@@ -22,7 +22,7 @@ public final class Configs {
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
             angleConfig
-                .idleMode(IdleMode.kCoast)
+                .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(20);
             angleConfig.absoluteEncoder
                 .inverted(true)

@@ -30,18 +30,12 @@ public class AlignByFieldPose extends Command {
 
   boolean startedFieldCentric;
   boolean hasTargetPos = false;
+  boolean isLeft;
 
   PIDController speedController;
   PIDController speedRotController;
-
-  public enum AlignDirection {
-    LEFT,
-    RIGHT
-  }
   
-  private AlignDirection side;
-
-  public AlignByFieldPose(DriveSubsystem swerveDrive, LedSubsystem leds, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel, AlignDirection side) {
+  public AlignByFieldPose(DriveSubsystem swerveDrive, LedSubsystem leds, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel, Boolean isLeft) {
       this.swerveDrive = swerveDrive;
       this.leds = leds;
       this.odometry = swerveDrive.getOdometry();
@@ -50,10 +44,10 @@ public class AlignByFieldPose extends Command {
       this.backOffset = backOffset;
       this.rotOffset = rotOffset;
       this.kV = kV;
-      this.side = side;
+      this.isLeft = isLeft;
       
       speedController = new PIDController(P, I, D);
-      speedController.setTolerance(0.05);
+      speedController.setTolerance(0.006);
       speedRotController = new PIDController(0.01, 0, 0);
       speedRotController.enableContinuousInput(-180, 180);
 
@@ -70,7 +64,7 @@ public class AlignByFieldPose extends Command {
 
       if (odometry.getClosestAprilTagPose().isPresent()) {
         double newSideOffset = sideOffset;
-        if (side == AlignDirection.LEFT) {
+        if (isLeft) {
           newSideOffset *= -1;
           newSideOffset -= DriverConstants.armOffset;
         }
@@ -96,7 +90,7 @@ public class AlignByFieldPose extends Command {
     if (!hasTargetPos) {
       if (odometry.getClosestAprilTagPose().isPresent()) {
         double newSideOffset = sideOffset;
-        if (side == AlignDirection.LEFT) {
+        if (isLeft) {
           newSideOffset *= -1 - DriverConstants.armOffset;
         }
 
@@ -126,7 +120,7 @@ public class AlignByFieldPose extends Command {
       double dy =  targetPose.getY() - odometry.getPose().getY();
 
       double distance = Math.hypot(dx, dy);
-      if (distance < 2) {
+      if (distance < 3) {
         double angleToTarget = Math.atan2(dy, dx) * 180 / Math.PI;
         double deltaRot = Math.abs(targetRot - odometry.getGyroHeading().getDegrees());
   

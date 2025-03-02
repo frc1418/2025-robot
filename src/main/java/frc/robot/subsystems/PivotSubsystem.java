@@ -67,11 +67,10 @@ public class PivotSubsystem extends SubsystemBase {
     else {
       force -= pivotController.calculate(pivotValue*360, posDegrees);
       force -= Math.signum(error) * PivotConstants.kV;
-      if (Math.abs(force) > 0.1) {
-        force = Math.signum(force)*0.1;
+      if (Math.abs(force) > PivotConstants.maxSpeed) {
+        System.out.println("TRYING TO GO: " + force);
+        force = Math.signum(force)*PivotConstants.maxSpeed;
       }
-      System.out.println("error: " + error);
-      System.out.println("force: " + force);
       pivotMotor.set(force);
     }
   }
@@ -109,25 +108,25 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public Boolean isSafe() {
-    return (pivotValue*360<67 && pivotValue*360>57);
+    return (pivotValue*360<67 && pivotValue*360>56);
   }
 
   public double maintainAngle(double pivotDegrees) {
-    double force = -(PivotConstants.kConstant+kG*Math.cos(pivotDegrees*2*Math.PI));
+    double force = -(PivotConstants.kConstant+kG*Math.cos(pivotDegrees*Math.PI/180));
     return force;
   }
 
   public Command holdPivot() {
     return new RunCommand(
       () -> {
-        pivotMotor.set(maintainAngle(pivotValue));
+        pivotMotor.set(maintainAngle(pivotValue*360));
       }, this);
   }
 
   public Command pivot(double speed) {
     return new RunCommand(
       () -> {
-        pivotMotor.set(speed+maintainAngle(pivotValue));
+        pivotMotor.set(speed+(maintainAngle(pivotValue*360)));
       }, this);
   }
 

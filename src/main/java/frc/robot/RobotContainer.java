@@ -12,7 +12,6 @@ import frc.robot.commands.DeliverL3;
 import frc.robot.commands.DeliverL4;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Reset;
-import frc.robot.commands.AlignByFieldPose.AlignDirection;
 import frc.robot.commands.AlignRot;
 import frc.robot.subsystems.ClimbSubsystem;  
 import frc.robot.subsystems.DriveSubsystem;
@@ -50,9 +49,10 @@ public class RobotContainer {
 
   // private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
   // private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
-  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.LEFT);
-  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
-  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.553, 0, 0.5, 0, 0.1, 0, 3, AlignDirection.RIGHT);
+  // L4 back offset 0.553
+  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.520, 0, 0.5, 0, 0.1, 0, 3, true);
+  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.1, 0.520, 0, 0.5, 0, 0.1, 0, 3, false);
+  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.745, 0, 0.5, 0, 0.1, 0, 3, false);
   // private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
@@ -118,17 +118,17 @@ public class RobotContainer {
     }, driveSubsystem));
 
     elevatorSubsystem.setDefaultCommand(elevatorSubsystem.holdElevator());
-    // pivotSubsytem.setDefaultCommand(pivotSubsytem.holdPivot());
+    pivotSubsytem.setDefaultCommand(pivotSubsytem.holdPivot());
     intakeSubsystem.setDefaultCommand(intakeSubsystem.holdIntake());
 
-    leftJoystick.button(1).whileTrue(alignByReefLeft);
+    leftJoystick.button(1).whileTrue(checkAprilTagNumber(alignByReefLeft, alignByIntake));
     leftJoystick.button(2).onTrue(driveSubsystem.setTempSlowMode(true));
     leftJoystick.button(2).onFalse(driveSubsystem.setTempSlowMode(false));
     leftJoystick.button(5).onTrue(driveSubsystem.toggleFieldCentric());
     leftJoystick.button(6).onTrue(driveSubsystem.toggleFastMode());
     leftJoystick.button(7).onTrue(driveSubsystem.toggleLimitDrive());
 
-    rightJoystick.button(1).whileTrue(alignByReefRight);
+    rightJoystick.button(1).whileTrue(checkAprilTagNumber(alignByReefRight, alignByIntake));
     rightJoystick.button(2).onTrue(driveSubsystem.resetFieldCentric());
     rightJoystick.button(3).whileTrue(driveSubsystem.getRotError());
     rightJoystick.button(3).onFalse(driveSubsystem.correctError());
@@ -139,21 +139,27 @@ public class RobotContainer {
     altJoystick.button(1).whileTrue(checkManualMode(
       elevatorSubsystem.runElevator(-0.2), 
       deliverL1));
+    altJoystick.button(1).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(2).whileTrue(checkManualMode(
       Commands.print(""), 
       deliverL2));
+    altJoystick.button(2).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(3).whileTrue(checkManualMode(
       elevatorSubsystem.runElevator(0.2), 
       deliverL3));
+    altJoystick.button(3).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(4).whileTrue(checkManualMode(
-      Commands.print(""), 
+      pivotSubsytem.setPivot(61.5), 
       reset));
+    altJoystick.button(4).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(5).whileTrue(checkManualMode(
       pivotSubsytem.pivot(0.075),
       intake));
+    altJoystick.button(5).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(6).whileTrue(checkManualMode(
       pivotSubsytem.pivot(-0.075), 
       deliverL4));
+    altJoystick.button(6).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(8).onTrue(toggleManualMode());
     altJoystick.button(9).onTrue(climbSubsystem.toggleAttach());
     altJoystick.button(10).onTrue(climbSubsystem.toggleClimb());
@@ -181,9 +187,11 @@ public class RobotContainer {
     return new RunCommand(() -> {
       if (!intakeCommand.isScheduled() && Set.of(1, 2, 12, 13).contains(driveSubsystem.getAprilTagNumber())) {
         intakeCommand.schedule();
+        System.out.println("intake command");
       }
-      else if (!reefCommand.isScheduled()){
+      else if (!reefCommand.isScheduled() && Set.of(6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22).contains(driveSubsystem.getAprilTagNumber())){
         reefCommand.schedule();
+        System.out.println("reef command");
       }
     }).finallyDo(interupted -> {
       ledSubsystem.allianceColor();
@@ -201,7 +209,6 @@ public class RobotContainer {
         autoCommand.schedule();
       }
     }).finallyDo(interupted -> {
-      ledSubsystem.allianceColor();
       manualCommand.cancel();
       autoCommand.cancel();
     });

@@ -29,7 +29,8 @@ public class DeliverL4 extends SequentialCommandGroup {
         intakeSubsystem.intakeOut(),
         pivotSubsystem.setPivot(-50)),
       Commands.deadline(
-        Commands.waitUntil(pivotSubsystem::isSafe), 
+        Commands.waitUntil(pivotSubsystem::isSafe),
+        intakeSubsystem.holdIntake(), 
         pivotSubsystem.setPivot(61.5),
         elevatorSubsystem.smoothControl()),
       Commands.deadline(
@@ -44,6 +45,7 @@ public class DeliverL4 extends SequentialCommandGroup {
         Commands.waitUntil(elevatorSubsystem::isLow),
         pivotSubsystem.setPivot(95),
         elevatorSubsystem.moveElevatorToHeight(-0.05)),
+      ledSubsystem.allianceColor(),
       Commands.waitUntil(robot::isAutonomous)    
     );
   }

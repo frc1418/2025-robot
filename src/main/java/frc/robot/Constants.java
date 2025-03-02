@@ -85,19 +85,20 @@ public final class Constants {
 
   public final static class PivotConstants {
     public static final int TALON_MOTOR_ID = 1;
-    public final static double ENCODER_SCALAR = -0.97;
+    public final static double ENCODER_SCALAR = -1;
 
-    public static final double PIVOT_OFFSET = -0.578888889; //36 degrees up 22.2 percent elevator to intake
+    public static final double PIVOT_OFFSET = 0.10611; //36 degrees up 22.2 percent elevator to intake
     // kG plus kConstant must be no more than 0.04 to keep falcon happy
+    public final static double maxSpeed = 0.175;
     public static final double pivotTolerance = 0.5;
     public static final double kCoral = 0.01;
     public static final double kG = 0.02;
-    public static final double kConstant = 0.025;
-    public static final double kV = 0.0175;
+    public static final double kConstant = 0.02;
+    public static final double kV = 0.011;
 
-    public final static double kP = 0.0015;
+    public final static double kP = 0.0016;
     public final static double kI = 0;
-    public final static double kD = 0;
+    public final static double kD = 0.0001;
   }
   public final static class PneumaticsConstants {
     public final static int PNEUMATICS_HUB_ID = 21;
@@ -114,10 +115,10 @@ public final class Constants {
 }
 
 public enum LedColor {
-  DONT_MOVE(0.57), //PINK
+  DONT_MOVE(-0.05), //RAINBOW TWINKLES
   CORAL_IN(0.77), //GREEN
-  ALIGNED(0.67), //GOLD
-  ALIGNING(0.93), //WHITE 
+  ALIGNED(-0.07), //STROBE GOLD
+  ALIGNING(0.67), //GOLD
   BLUE_ALLIANCE(0.87), //BLUE
   RED_ALLIANCE(0.61); //RED
 

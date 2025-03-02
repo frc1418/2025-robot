@@ -75,6 +75,7 @@ public class LedSubsystem extends SubsystemBase {
       return Commands.runOnce(
         () -> {
           setAllianceColor();
+          System.out.println("resetting alliance color");
         });
     }
 }

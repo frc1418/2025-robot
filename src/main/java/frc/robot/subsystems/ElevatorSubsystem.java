@@ -84,6 +84,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return heightValue;
   }
 
+  public Boolean isSafeL3() {
+    return heightValue < 0.6;
+  }
+
   public Boolean isMiddle() {
     return heightValue < 0.57;
   }

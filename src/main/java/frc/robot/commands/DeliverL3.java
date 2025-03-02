@@ -19,29 +19,26 @@ public class DeliverL3 extends SequentialCommandGroup {
       Commands.deadline(
         Commands.waitSeconds(2), 
         pivotSubsystem.setPivot(65),
-        elevatorSubsystem.moveElevatorToHeight(0.75)),
+        elevatorSubsystem.moveElevatorToHeight(0.65)),
       Commands.deadline(
         Commands.waitSeconds(0.5),
-        pivotSubsystem.setPivot(-50)),
+        pivotSubsystem.setPivot(-50),
+        elevatorSubsystem.moveElevatorToHeight(0.65)),
       Commands.deadline(
         Commands.waitSeconds(0.25), 
         intakeSubsystem.intakeOut(),
-        pivotSubsystem.setPivot(-50)),
-      Commands.deadline(
-        Commands.waitUntil(pivotSubsystem::isSafe), 
-        pivotSubsystem.setPivot(61.5),
+        pivotSubsystem.setPivot(-50),
         elevatorSubsystem.smoothControl()),
       Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isMiddle), 
-        pivotSubsystem.setPivot(61.5),
-        elevatorSubsystem.moveElevatorToHeight(0.2)),
+        Commands.waitUntil(elevatorSubsystem::isSafeL3), 
+        elevatorSubsystem.moveElevatorToHeight(0.59)),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isKindaLow), 
-        pivotSubsystem.setPivot(95),
+        pivotSubsystem.setPivot(90),
         elevatorSubsystem.moveElevatorToHeight(0.2)),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isLow),
-        pivotSubsystem.setPivot(95),
+        pivotSubsystem.setPivot(90),
         elevatorSubsystem.moveElevatorToHeight(-0.05)),
       ledSubsystem.allianceColor(),
       Commands.waitUntil(robot::isAutonomous)    

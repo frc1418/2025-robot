@@ -117,7 +117,6 @@ public class FieldSpaceOdometry {
   }
 
   public int getAprilTagNumber() {
-    System.out.println("ID: " + (int)LimelightHelpers.getFiducialID("limelight"));
     return (int)LimelightHelpers.getFiducialID("limelight");
   }
 
