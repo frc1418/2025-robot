@@ -71,7 +71,7 @@ public final class Constants {
     public final static double ELEVATOR_OFFSET = 0.037;
 
     public final static double maxSpeed = 0.6;
-    public final static double kV = 0.12;
+    public final static double kV = 0.1;
     public final static double kG = 0.125;
     public final static double kCoral = 0.025;
 
@@ -142,7 +142,7 @@ public enum LedColor {
     public final static double maxCorrectiveAngularSpeed = Math.PI;
     public final static double correctiveFactor = 0.16;
     public final static double baseCorrector = 0.04;
-    public final static double armOffset = 0.14;
+    public final static double armOffset = 0.11;
   }
 
   public final static class WheelConstants {

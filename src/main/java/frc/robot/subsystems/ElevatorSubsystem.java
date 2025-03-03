@@ -147,9 +147,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
-  public Command smoothControl() {
+  public Command smoothControl(double smoothValue) {
     return new RunCommand(() -> {
-      speedLimiter.reset(0.125);
+      speedLimiter.reset(smoothValue);
     });
   }
 

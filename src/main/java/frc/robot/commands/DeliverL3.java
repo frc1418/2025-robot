@@ -28,7 +28,7 @@ public class DeliverL3 extends SequentialCommandGroup {
         Commands.waitSeconds(0.25), 
         intakeSubsystem.intakeOut(),
         pivotSubsystem.setPivot(-50),
-        elevatorSubsystem.smoothControl()),
+        elevatorSubsystem.smoothControl(0.125)),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isSafeL3), 
         elevatorSubsystem.moveElevatorToHeight(0.59)),

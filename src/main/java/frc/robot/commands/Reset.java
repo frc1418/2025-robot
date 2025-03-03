@@ -18,7 +18,7 @@ public class Reset extends SequentialCommandGroup {
       Commands.deadline(
           Commands.waitUntil(pivotSubsystem::isSafe), 
           pivotSubsystem.setPivot(61.5),
-          elevatorSubsystem.smoothControl()),
+          elevatorSubsystem.smoothControl(0.125)),
       Commands.deadline(
           Commands.waitUntil(elevatorSubsystem::isMiddle), 
           pivotSubsystem.setPivot(61.5),

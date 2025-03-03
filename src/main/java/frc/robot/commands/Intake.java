@@ -17,14 +17,17 @@ public class Intake extends SequentialCommandGroup {
     addCommands(
       ledSubsystem.dontMoveColor(),
       Commands.deadline(
+        Commands.waitSeconds(0.01),
+        elevatorSubsystem.smoothControl(-0.01)),
+      Commands.deadline(
         Commands.waitUntil(intakeSubsystem::getHasCoral), 
         pivotSubsystem.setPivot(36),
-        elevatorSubsystem.moveElevatorToHeight(0.235),
+        elevatorSubsystem.moveElevatorToHeight(0.23),
         intakeSubsystem.intakeIn()),
       Commands.deadline(
         Commands.waitUntil(pivotSubsystem::isSafe), 
         pivotSubsystem.setPivot(70),
-        elevatorSubsystem.smoothControl(),
+        elevatorSubsystem.smoothControl(0.125),
         intakeSubsystem.holdIntake()),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isMiddle), 
