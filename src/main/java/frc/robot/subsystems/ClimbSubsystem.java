@@ -74,7 +74,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void attachToggle() {
     attachSolenoid.toggle();
-    System.out.println(attachSolenoid.get());
     attachPistonsOut = !attachPistonsOut;
   }
 

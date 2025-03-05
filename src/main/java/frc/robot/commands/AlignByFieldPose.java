@@ -74,8 +74,8 @@ public class AlignByFieldPose extends Command {
           newSideOffset *= -1;
           newSideOffset -= DriverConstants.armOffset;
         }
-        // backOffset += leftJoystick.getThrottle()*0.1;
-        // newSideOffset += rightJoystick.getThrottle()*0.1;
+        // backOffset += leftJoystick.getThrottle()*0.2;
+        // newSideOffset += rightJoystick.getThrottle()*0.2;
 
         double tagRotation = odometry.getClosestAprilTagPose().get().getRotation().toRotation2d().getDegrees();
         double offsetX = backOffset * Math.cos(Math.toRadians(tagRotation)) - newSideOffset * Math.sin(Math.toRadians(tagRotation));

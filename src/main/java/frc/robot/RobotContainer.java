@@ -170,11 +170,9 @@ public class RobotContainer {
     return new RunCommand(() -> {
       if (!intakeCommand.isScheduled() && Set.of(1, 2, 12, 13).contains(driveSubsystem.getAprilTagNumber())) {
         intakeCommand.schedule();
-        System.out.println("intake command");
       }
       else if (!reefCommand.isScheduled() && Set.of(6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22).contains(driveSubsystem.getAprilTagNumber())){
         reefCommand.schedule();
-        System.out.println("reef command");
       }
     }).finallyDo(interupted -> {
       ledSubsystem.allianceColor();

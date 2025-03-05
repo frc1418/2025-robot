@@ -141,7 +141,6 @@ public class PivotSubsystem extends SubsystemBase {
     return Commands.runOnce(
       () -> {
         pivotController.reset();
-        System.out.println("reset");
       }, this);
   }
 
