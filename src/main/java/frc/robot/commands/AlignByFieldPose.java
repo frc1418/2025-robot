@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.common.FieldSpaceOdometry;
 import frc.robot.subsystems.DriveSubsystem;
@@ -34,8 +35,11 @@ public class AlignByFieldPose extends Command {
 
   PIDController speedController;
   PIDController speedRotController;
+
+  CommandJoystick leftJoystick;
+  CommandJoystick rightJoystick;
   
-  public AlignByFieldPose(DriveSubsystem swerveDrive, LedSubsystem leds, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel, Boolean isLeft) {
+  public AlignByFieldPose(DriveSubsystem swerveDrive, LedSubsystem leds, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel, Boolean isLeft, CommandJoystick leftJoystick, CommandJoystick rightJoystick) {
       this.swerveDrive = swerveDrive;
       this.leds = leds;
       this.odometry = swerveDrive.getOdometry();
@@ -45,6 +49,8 @@ public class AlignByFieldPose extends Command {
       this.rotOffset = rotOffset;
       this.kV = kV;
       this.isLeft = isLeft;
+      this.leftJoystick = leftJoystick;
+      this.rightJoystick = rightJoystick;
       
       speedController = new PIDController(P, I, D);
       speedController.setTolerance(0.006);
@@ -68,6 +74,8 @@ public class AlignByFieldPose extends Command {
           newSideOffset *= -1;
           newSideOffset -= DriverConstants.armOffset;
         }
+        // backOffset += leftJoystick.getThrottle()*0.1;
+        // newSideOffset += rightJoystick.getThrottle()*0.1;
 
         double tagRotation = odometry.getClosestAprilTagPose().get().getRotation().toRotation2d().getDegrees();
         double offsetX = backOffset * Math.cos(Math.toRadians(tagRotation)) - newSideOffset * Math.sin(Math.toRadians(tagRotation));

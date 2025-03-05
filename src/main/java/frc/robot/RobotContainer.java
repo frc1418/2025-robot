@@ -11,7 +11,9 @@ import frc.robot.commands.DeliverL2;
 import frc.robot.commands.DeliverL3;
 import frc.robot.commands.DeliverL4;
 import frc.robot.commands.Intake;
+import frc.robot.commands.IntakeAuto;
 import frc.robot.commands.Reset;
+import frc.robot.commands.ResetAuto;
 import frc.robot.commands.AlignRot;
 import frc.robot.subsystems.ClimbSubsystem;  
 import frc.robot.subsystems.DriveSubsystem;
@@ -22,7 +24,6 @@ import frc.robot.subsystems.PivotSubsystem;
 import java.util.Set;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -50,9 +51,9 @@ public class RobotContainer {
   // private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
   // private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
   // L4 back offset 0.553
-  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, true);
-  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, false);
-  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.665, 0, 0.5, 0, 0.1, 0, 3, false);
+  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, true, leftJoystick, rightJoystick);
+  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, false, leftJoystick, rightJoystick);
+  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.665, 0, 0.5, 0, 0.1, 0, 3, false, leftJoystick, rightJoystick);
   // private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
@@ -62,7 +63,9 @@ public class RobotContainer {
   private final DeliverL2 deliverL2;
   private final DeliverL1 deliverL1;
   private final Intake intake;
+  private final IntakeAuto intakeAuto;
   private final Reset reset;
+  private final ResetAuto resetAuto;
 
   private Boolean manualMode = false;
   
@@ -72,7 +75,9 @@ public class RobotContainer {
     deliverL2 = new DeliverL2(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
     deliverL1 = new DeliverL1(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
     intake = new Intake(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
+    intakeAuto = new IntakeAuto(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
     reset = new Reset(pivotSubsytem, elevatorSubsystem, ledSubsystem, robot);
+    resetAuto = new ResetAuto(pivotSubsytem, elevatorSubsystem, ledSubsystem, robot);
 
     NamedCommands.registerCommand("elevatorIntake", elevatorSubsystem.moveElevatorToHeight(0.222));
     NamedCommands.registerCommand("elevatorDeliver", elevatorSubsystem.moveElevatorToHeight(1.01));
@@ -84,21 +89,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("deliverL2", deliverL2);
     NamedCommands.registerCommand("deliverL3", deliverL3);
     NamedCommands.registerCommand("deliverL4", deliverL4);
-    NamedCommands.registerCommand("intake", intake);
-    NamedCommands.registerCommand("reset", reset);
-
-    new EventTrigger("elevatorIntake").whileTrue(elevatorSubsystem.moveElevatorToHeight(0.222));
-    new EventTrigger("elevatorDeliver").whileTrue(elevatorSubsystem.moveElevatorToHeight(1.03));
-    new EventTrigger("pivotIntake").whileTrue(pivotSubsytem.setPivot(36));
-    new EventTrigger("pivotDeliver").whileTrue(pivotSubsytem.setPivot(-31));
-    new EventTrigger("intakeIn").whileTrue(intakeSubsystem.intakeIn());
-    new EventTrigger("intakeOut").whileTrue(intakeSubsystem.intakeOut());
-    new EventTrigger("deliverL1").whileTrue(deliverL1);
-    new EventTrigger("deliverL2").whileTrue(deliverL2);
-    new EventTrigger("deliverL3").whileTrue(deliverL3);
-    new EventTrigger("deliverL4").whileTrue(deliverL4);
-    new EventTrigger("intake").whileTrue(intake);
-    new EventTrigger("reset").whileTrue(reset);
+    NamedCommands.registerCommand("intake", intakeAuto);
+    NamedCommands.registerCommand("reset", resetAuto);
+    NamedCommands.registerCommand("zeroElevator", elevatorSubsystem.reZero());
 
     configureBindings();
 
@@ -136,21 +129,9 @@ public class RobotContainer {
     rightJoystick.pov(0).whileTrue(alignRotForward);
     rightJoystick.pov(180).whileTrue(alignRotBackward);
 
-    altJoystick.button(1).whileTrue(checkManualMode(
-      elevatorSubsystem.runElevator(-0.2), 
-      deliverL1));
-    altJoystick.button(1).onFalse(ledSubsystem.allianceColor());
-    altJoystick.button(2).whileTrue(checkManualMode(
-      Commands.print(""), 
-      deliverL2));
-    altJoystick.button(2).onFalse(ledSubsystem.allianceColor());
-    altJoystick.button(3).whileTrue(checkManualMode(
-      elevatorSubsystem.runElevator(0.2), 
-      deliverL3));
-    altJoystick.button(3).onFalse(ledSubsystem.allianceColor());
-    altJoystick.button(4).whileTrue(checkManualMode(
-      pivotSubsytem.setPivot(61.5), 
-      reset));
+    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(-0.2));
+    altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.2));
+    altJoystick.button(4).whileTrue(reset);
     altJoystick.button(4).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(5).whileTrue(checkManualMode(
       pivotSubsytem.pivot(0.075),
@@ -163,6 +144,8 @@ public class RobotContainer {
     altJoystick.button(8).onTrue(toggleManualMode());
     altJoystick.button(9).onTrue(climbSubsystem.toggleAttach());
     altJoystick.button(10).onTrue(climbSubsystem.toggleClimb());
+    altJoystick.pov(0).whileTrue(intakeSubsystem.intakeOut());
+    altJoystick.pov(180).whileTrue(intakeSubsystem.intakeIn());                                                                                                                                                                                                                                                                                                
   }
 
   public double applyDeadband(double input, double deadband) {

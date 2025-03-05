@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Intake extends SequentialCommandGroup {
-  public Intake(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
+public class IntakeAuto extends SequentialCommandGroup {
+  public IntakeAuto(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
     addCommands(
       ledSubsystem.dontMoveColor(),
       Commands.deadline(
@@ -26,24 +26,10 @@ public class Intake extends SequentialCommandGroup {
         intakeSubsystem.intakeIn()),
       Commands.deadline(
         Commands.waitUntil(pivotSubsystem::isSafe), 
-        pivotSubsystem.setPivot(70),
+        pivotSubsystem.setPivot(85),
         elevatorSubsystem.smoothControl(0.125),
         intakeSubsystem.holdIntake()),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isMiddle), 
-        pivotSubsystem.setPivot(70),
-        elevatorSubsystem.moveElevatorToHeight(0.2)),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isKindaLow), 
-        pivotSubsystem.setPivot(95),
-        elevatorSubsystem.moveElevatorToHeight(0.2)),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isLow),
-        pivotSubsystem.setPivot(95),
-        elevatorSubsystem.moveElevatorToHeight(-0.1)),
       ledSubsystem.allianceColor(),
-      Commands.waitSeconds(0.3), 
-      elevatorSubsystem.reZero(),
       Commands.waitUntil(robot::isAutonomous)    
     );
   }

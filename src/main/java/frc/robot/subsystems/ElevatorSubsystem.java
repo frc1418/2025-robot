@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -36,7 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private IntakeSubsystem intakeSubsystem;
 
   private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
-  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.75);
+  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.85);
 
   private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
   private double lastHeight;
@@ -88,16 +89,20 @@ public class ElevatorSubsystem extends SubsystemBase {
     return heightValue < 0.6;
   }
 
+  public Boolean isTop() {
+    return heightValue > 1.02;
+  }
+
   public Boolean isMiddle() {
     return heightValue < 0.57;
   }
 
   public Boolean isKindaLow() {
-    return heightValue < 0.3;
+    return heightValue < 0.24;
   }
 
   public Boolean isLow() {
-    return heightValue < 0.03;
+    return heightValue < 0.02;
   }
 
   public void moveElevator(double speed) {
@@ -109,7 +114,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void setElevatorLocation(double height) {
     double error = height - heightValue;
     double speed;
-    if (Math.abs(error) < 0.005) {
+    if (Math.abs(error) < 0.0025) {
       speed = kG;
     }
     else {
@@ -145,6 +150,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     else {
       kG = ElevatorConstants.kG;
     }
+  }
+
+  public Command reZero() {
+    return Commands.runOnce(() -> {
+      System.out.println("ELEVATOR ZEROED");
+      initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
+    });
   }
 
   public Command smoothControl(double smoothValue) {

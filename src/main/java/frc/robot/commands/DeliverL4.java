@@ -21,35 +21,34 @@ public class DeliverL4 extends SequentialCommandGroup {
         Commands.waitSeconds(0.01),
         elevatorSubsystem.smoothControl(-0.01)),
       Commands.deadline(
-        Commands.waitSeconds(2), 
+        Commands.waitSeconds(1.75), 
         pivotSubsystem.setPivot(60),
-        elevatorSubsystem.moveElevatorToHeight(1.05)),
+        elevatorSubsystem.moveElevatorToHeight(1.1)),
       Commands.deadline(
         Commands.waitSeconds(0.5),
         pivotSubsystem.setPivot(-50)),
       Commands.deadline(
-        Commands.waitSeconds(0.25), 
+        Commands.waitSeconds(0.3), 
         intakeSubsystem.intakeOut(),
         pivotSubsystem.setPivot(-50)),
       Commands.deadline(
         Commands.waitUntil(pivotSubsystem::isSafe),
         intakeSubsystem.holdIntake(), 
-        pivotSubsystem.setPivot(61.5),
+        pivotSubsystem.setPivot(70),
         elevatorSubsystem.smoothControl(0.125)),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isMiddle), 
-        pivotSubsystem.setPivot(61.5),
-        elevatorSubsystem.moveElevatorToHeight(0.2)),
+        pivotSubsystem.setPivot(70),
+        elevatorSubsystem.moveElevatorToHeight(0.23)),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isKindaLow), 
         pivotSubsystem.setPivot(95),
-        elevatorSubsystem.moveElevatorToHeight(0.2)),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isLow),
-        pivotSubsystem.setPivot(95),
-        elevatorSubsystem.moveElevatorToHeight(-0.05)),
+        elevatorSubsystem.moveElevatorToHeight(0.23)),
       ledSubsystem.allianceColor(),
-      Commands.waitUntil(robot::isAutonomous)    
+      Commands.deadline(
+      Commands.waitUntil(robot::isAutonomous),
+      pivotSubsystem.setPivot(95),
+      elevatorSubsystem.moveElevatorToHeight(0.23))
     );
   }
 }

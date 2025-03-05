@@ -11,18 +11,14 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Reset extends SequentialCommandGroup {
-  public Reset(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
+public class ResetAuto extends SequentialCommandGroup {
+  public ResetAuto(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
     addCommands(
       ledSubsystem.dontMoveColor(),
       Commands.deadline(
-          Commands.waitUntil(pivotSubsystem::isSafe), 
-          pivotSubsystem.setPivot(69),
+          Commands.waitSeconds(0.1), 
+          pivotSubsystem.setPivot(95),
           elevatorSubsystem.smoothControl(0.125)),
-      Commands.deadline(
-          Commands.waitUntil(elevatorSubsystem::isMiddle), 
-          pivotSubsystem.setPivot(69),
-          elevatorSubsystem.moveElevatorToHeight(0.2)),
       Commands.deadline(
           Commands.waitUntil(elevatorSubsystem::isKindaLow), 
           pivotSubsystem.setPivot(95),

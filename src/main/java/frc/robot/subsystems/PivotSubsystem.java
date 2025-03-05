@@ -108,7 +108,7 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public Boolean isSafe() {
-    return (pivotValue*360<67 && pivotValue*360>56);
+    return (pivotValue*360<72 && pivotValue*360>56);
   }
 
   public double maintainAngle(double pivotDegrees) {

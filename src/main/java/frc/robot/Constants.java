@@ -70,7 +70,7 @@ public final class Constants {
     public final static double ENCODER_SCALAR = 4.43;
     public final static double ELEVATOR_OFFSET = 0.037;
 
-    public final static double maxSpeed = 0.6;
+    public final static double maxSpeed = 0.7;
     public final static double kV = 0.1;
     public final static double kG = 0.125;
     public final static double kCoral = 0.025;
@@ -135,7 +135,7 @@ public enum LedColor {
 }
 
   public final static class DriverConstants {
-    public final static double maxAccel = 1.5;
+    public final static double maxAccel = 2.5;
     public final static double maxSpeedMetersPerSecond = 4.8;
     public final static double maxAngularAccel = 0.075;
     public final static double maxAngularSpeed = 2*Math.PI;
