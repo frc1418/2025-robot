@@ -52,20 +52,25 @@
       },
       "rotationOffset": 0.0,
       "minWaypointRelativePos": 0.03,
-      "maxWaypointRelativePos": 0.75,
+      "maxWaypointRelativePos": 1.5,
       "name": "Point Towards Zone"
     }
   ],
   "eventMarkers": [
     {
-      "name": "intakeIn",
+      "name": "intake",
       "waypointRelativePos": 0.6209653253424657,
-      "endWaypointRelativePos": 1.0,
-      "command": null
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intake"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
