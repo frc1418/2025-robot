@@ -12,8 +12,8 @@ public final class Constants {
 
     public static final double wheelPos = 0.33655;
 
-    public static final double DRIFT_DEADBAND = 0.15;
-    public static final double ROTATION_DEADBAND = 0.03;
+    public static final double DRIFT_DEADBAND = 0.1;
+    public static final double ROTATION_DEADBAND = 0.02;
 
     public static final int FRONT_LEFT_ANGLE_ID = 3;
     public static final int FRONT_LEFT_SPEED_ID = 4;
