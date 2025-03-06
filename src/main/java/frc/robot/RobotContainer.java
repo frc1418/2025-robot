@@ -51,9 +51,9 @@ public class RobotContainer {
   // private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
   // private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
   // L4 back offset 0.553
-  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, true, leftJoystick, rightJoystick);
-  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, false, leftJoystick, rightJoystick);
-  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.665, 0, 0.5, 0, 0.1, 0, 3, false, leftJoystick, rightJoystick);
+  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, true);
+  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55, 0, 0.5, 0, 0.1, 0, 3, false);
+  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.71, 0, 0.5, 0, 0.1, 0, 3, false);
   // private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
@@ -129,10 +129,27 @@ public class RobotContainer {
     rightJoystick.pov(0).whileTrue(alignRotForward);
     rightJoystick.pov(180).whileTrue(alignRotBackward);
 
-    altJoystick.button(1).whileTrue(elevatorSubsystem.runElevator(-0.2));
-    altJoystick.button(3).whileTrue(elevatorSubsystem.runElevator(0.2));
-    altJoystick.button(4).whileTrue(reset);
+    altJoystick.button(1).whileTrue(checkManualMode(Commands.none(), elevatorSubsystem.runElevator(-0.2)));
+    altJoystick.button(1).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustDeliverBack(0.01);
+      }}));
+    altJoystick.button(2).whileTrue(checkManualMode(Commands.none(), deliverL3));
+    altJoystick.button(2).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustDeliverSide(0.01);
+      }}));
+    altJoystick.button(3).whileTrue(checkManualMode(Commands.none(), elevatorSubsystem.runElevator(0.2)));
+    altJoystick.button(3).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustDeliverSide(-0.01);
+      }}));
+    altJoystick.button(4).whileTrue(checkManualMode(Commands.none(), reset));
     altJoystick.button(4).onFalse(ledSubsystem.allianceColor());
+    altJoystick.button(4).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustDeliverBack(-0.01);
+      }}));
     altJoystick.button(5).whileTrue(checkManualMode(
       pivotSubsytem.pivot(0.075),
       intake));
@@ -142,10 +159,40 @@ public class RobotContainer {
       deliverL4));
     altJoystick.button(6).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(8).onTrue(toggleManualMode());
-    altJoystick.button(9).onTrue(climbSubsystem.toggleAttach());
-    altJoystick.button(10).onTrue(climbSubsystem.toggleClimb());
-    altJoystick.pov(0).whileTrue(intakeSubsystem.intakeOut());
-    altJoystick.pov(180).whileTrue(intakeSubsystem.intakeIn());                                                                                                                                                                                                                                                                                                
+    altJoystick.button(9).onTrue(Commands.runOnce(() -> {
+      if (!manualMode) {
+        climbSubsystem.attachToggle();
+      }}));
+    altJoystick.button(9).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustArmOffset(0.01);
+      }}));
+    altJoystick.button(10).onTrue(Commands.runOnce(() -> {
+      if (!manualMode) {
+        climbSubsystem.climbToggle();
+      }}));    
+    altJoystick.button(10).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustArmOffset(-0.01);
+      }}));    
+    altJoystick.pov(0).whileTrue(checkManualMode(Commands.none(), intakeSubsystem.intakeOut()));
+    altJoystick.pov(0).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustIntakeBack(-0.01);
+      }}));
+    altJoystick.pov(90).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustIntakeSide(0.01);
+      }}));
+    altJoystick.pov(180).whileTrue(checkManualMode(Commands.none(), intakeSubsystem.intakeIn()));      
+    altJoystick.pov(180).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustIntakeBack(0.01);
+      }}));           
+    altJoystick.pov(270).onTrue(Commands.runOnce(() -> {
+      if (manualMode) {
+        adjustIntakeSide(-0.01);
+      }}));                                                                                                                                                                                                                                                                               
   }
 
   public double applyDeadband(double input, double deadband) {
@@ -179,6 +226,28 @@ public class RobotContainer {
       reefCommand.cancel();
       intakeCommand.cancel();
     });
+  }
+
+  public void adjustIntakeSide(double offset) {
+    alignByIntake.adjustSideOffset(offset, "Intake");
+  }
+
+  public void adjustIntakeBack(double offset) {
+    alignByIntake.adjustBackOffset(offset, "Intake");
+  }
+
+  public void adjustDeliverSide(double offset) {
+    alignByReefLeft.adjustSideOffset(offset, "DeliverLeft");
+    alignByReefRight.adjustSideOffset(offset, "DeliverRight");
+  }
+
+  public void adjustDeliverBack(double offset) {
+    alignByReefLeft.adjustBackOffset(offset, "DeliverLeft");
+    alignByReefRight.adjustBackOffset(offset, "DeliverRight");
+  }
+
+  public void adjustArmOffset(double offset) {
+    alignByReefLeft.adjustArmOffset(offset, "Deliver Left");
   }
 
   public Command checkManualMode(Command manualCommand, Command autoCommand) {
