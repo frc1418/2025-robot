@@ -17,34 +17,18 @@ public class DeliverL2 extends SequentialCommandGroup {
     addCommands(
       ledSubsystem.dontMoveColor(),
       Commands.deadline(
-        Commands.waitSeconds(2), 
+        Commands.waitSeconds(1), 
         pivotSubsystem.setPivot(65),
-        elevatorSubsystem.moveElevatorToHeight(0.5)),
+        elevatorSubsystem.moveElevatorToHeight(0.3)),
       Commands.deadline(
-        Commands.waitSeconds(0.5),
-        pivotSubsystem.setPivot(-50)),
-      Commands.deadline(
-        Commands.waitSeconds(0.25), 
-        intakeSubsystem.intakeOut(),
-        pivotSubsystem.setPivot(-50)),
-      Commands.deadline(
-        Commands.waitUntil(pivotSubsystem::isSafe), 
-        pivotSubsystem.setPivot(61.5),
-        elevatorSubsystem.smoothControl(0.125)),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isMiddle), 
-        pivotSubsystem.setPivot(61.5),
-        elevatorSubsystem.moveElevatorToHeight(0.2)),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isKindaLow), 
-        pivotSubsystem.setPivot(95),
-        elevatorSubsystem.moveElevatorToHeight(0.2)),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isLow),
-        pivotSubsystem.setPivot(95),
-        elevatorSubsystem.moveElevatorToHeight(-0.05)),
+        Commands.waitSeconds(1),
+        pivotSubsystem.setPivot(-50),
+        elevatorSubsystem.moveElevatorToHeight(0.3)),
       ledSubsystem.allianceColor(),
-      Commands.waitUntil(robot::isAutonomous)    
+      Commands.deadline(
+      Commands.waitUntil(robot::isAutonomous),
+      pivotSubsystem.setPivot(-50),
+      elevatorSubsystem.moveElevatorToHeight(0.3)) 
     );
   }
 }

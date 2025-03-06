@@ -68,7 +68,6 @@ public class PivotSubsystem extends SubsystemBase {
       force -= pivotController.calculate(pivotValue*360, posDegrees);
       force -= Math.signum(error) * PivotConstants.kV;
       if (Math.abs(force) > PivotConstants.maxSpeed) {
-        System.out.println("TRYING TO GO: " + force);
         force = Math.signum(force)*PivotConstants.maxSpeed;
       }
       pivotMotor.set(force);

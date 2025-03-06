@@ -21,23 +21,20 @@ public class DeliverL4 extends SequentialCommandGroup {
         Commands.waitSeconds(0.01),
         elevatorSubsystem.smoothControl(-0.01)),
       Commands.deadline(
-        Commands.waitSeconds(1.75), 
+        Commands.waitSeconds(1.65), 
         pivotSubsystem.setPivot(60),
-        elevatorSubsystem.moveElevatorToHeight(1.1)),
+        elevatorSubsystem.moveElevatorToHeight(1.15)),
       Commands.deadline(
         Commands.waitSeconds(0.5),
         pivotSubsystem.setPivot(-50)),
       Commands.deadline(
-        Commands.waitSeconds(0.3), 
+        Commands.waitSeconds(0.2), 
         intakeSubsystem.intakeOut(),
-        pivotSubsystem.setPivot(-50)),
-      Commands.deadline(
-        Commands.waitUntil(pivotSubsystem::isSafe),
-        intakeSubsystem.holdIntake(), 
-        pivotSubsystem.setPivot(70),
-        elevatorSubsystem.smoothControl(0.125)),
+        pivotSubsystem.setPivot(-50),
+        elevatorSubsystem.smoothControl(0.075)),
       Commands.deadline(
         Commands.waitUntil(elevatorSubsystem::isMiddle), 
+        intakeSubsystem.holdIntake(), 
         pivotSubsystem.setPivot(70),
         elevatorSubsystem.moveElevatorToHeight(0.23)),
       Commands.deadline(

@@ -96,13 +96,13 @@ public class ClimbSubsystem extends SubsystemBase {
   public void periodic() {
     ph.enableCompressorAnalog(100,120);
     ntClimbPistons.setBoolean(climbPistonsOut);
-    ntAttachPistons.setBoolean(attachPistonsOut);
+    ntAttachPistons.setBoolean(!attachPistonsOut);
     ntPressure.setDouble(ph.getPressure(0));
     ntHandPistonsAttached.setBoolean(switch1.get() && switch2.get());
   }
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+    // This method will be called once pßer scheduler run during simulation
   }
 }
