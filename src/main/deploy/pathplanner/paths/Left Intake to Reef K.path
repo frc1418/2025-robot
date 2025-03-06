@@ -3,39 +3,44 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.315,
-        "y": 6.791
+        "x": 1.336,
+        "y": 6.818
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2683683003173023,
-        "y": 5.985675109937804
+        "x": 1.8493304519126752,
+        "y": 6.785901518995594
       },
       "isLocked": false,
       "linkedName": "Left Intake"
     },
     {
       "anchor": {
-        "x": 3.979,
-        "y": 5.344
+        "x": 3.854,
+        "y": 5.298
       },
       "prevControl": {
-        "x": 3.081444276201526,
-        "y": 5.830725524010394
+        "x": 3.5685685477872404,
+        "y": 5.504672016114046
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Reef K"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": -59.99999999999999
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.87,
+      "minWaypointRelativePos": 0.8245042566445183,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.85,
+        "maxVelocity": 0.8,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -44,22 +49,23 @@
       }
     }
   ],
-  "pointTowardsZones": [
+  "pointTowardsZones": [],
+  "eventMarkers": [
     {
-      "fieldPosition": {
-        "x": 4.0,
-        "y": 4.5
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.03218438538205978,
-      "maxWaypointRelativePos": 0.75,
-      "name": "Point Towards Zone"
+      "name": "reset",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "reset"
+        }
+      }
     }
   ],
-  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 10.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -70,10 +76,10 @@
     "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "3 Coral Auto Right",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 126.0
+    "rotation": 124.0
   },
   "useDefaultConstraints": true
 }

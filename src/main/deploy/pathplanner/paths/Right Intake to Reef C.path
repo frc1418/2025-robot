@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5628290377339746,
-        "y": 1.3371122620852542
+        "x": 1.5491227999460304,
+        "y": 1.3626853937636656
       },
       "isLocked": false,
       "linkedName": "Right Intake"
@@ -20,12 +20,12 @@
         "y": 1.609161376953125
       },
       "prevControl": {
-        "x": 2.499372192108208,
-        "y": 1.3976223512143056
+        "x": 2.6063325814285787,
+        "y": 1.312681439733193
       },
       "nextControl": {
-        "x": 3.083058735230662,
-        "y": 1.7946234624126853
+        "x": 3.538832477733323,
+        "y": 2.6675653172544482
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 2.917
       },
       "prevControl": {
-        "x": 3.338073540453963,
-        "y": 2.8188479587546715
+        "x": 3.4352358227896227,
+        "y": 2.705165929912935
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,7 +53,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.6096318493150685,
+      "minWaypointRelativePos": 1.5895761986301369,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 0.8,
@@ -80,8 +80,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 10.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -92,7 +92,7 @@
     "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "3 Coral Auto Right",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -124.0

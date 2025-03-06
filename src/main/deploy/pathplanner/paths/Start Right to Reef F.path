@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.328031792188539,
-        "y": 1.091959065323481
+        "x": 7.3052696788887275,
+        "y": 1.1478160093637593
       },
       "isLocked": false,
       "linkedName": "Start Right"
     },
     {
       "anchor": {
-        "x": 5.3,
-        "y": 2.837
+        "x": 5.29,
+        "y": 2.85
       },
       "prevControl": {
-        "x": 4.81191256232379,
-        "y": 3.26036984049734
+        "x": 5.408944046048712,
+        "y": 2.6301084041861498
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6444135273972603,
+      "minWaypointRelativePos": 0.7920343646179402,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -58,8 +58,8 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 10.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -70,7 +70,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "3 Coral Auto Right",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
