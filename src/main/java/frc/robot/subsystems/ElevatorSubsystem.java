@@ -17,6 +17,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -35,6 +36,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
   private IntakeSubsystem intakeSubsystem;
+
+  private DigitalInput zeroSwitch = new DigitalInput(4);
+  private double zeroCounter= 0;
 
   private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
   private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.85);
@@ -102,7 +106,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public Boolean isLow() {
-    return heightValue < 0.02;
+    return heightValue < 0.05;
   }
 
   public void moveElevator(double speed) {
@@ -121,7 +125,6 @@ public class ElevatorSubsystem extends SubsystemBase {
       speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+kG;
     }
     if (Math.abs(speed) > ElevatorConstants.maxSpeed) {
-      System.out.println("TRYING TO GO: " + speed);
       speed = Math.signum(speed)*ElevatorConstants.maxSpeed;
     }
     moveElevator(speed);
@@ -169,6 +172,16 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     updateElevator();
     updateFF();
+    if (zeroSwitch.get()) {
+      zeroCounter++;
+      if (zeroCounter > 10) {
+        reZero();
+        zeroCounter = 0;
+      }
+    }
+    else {
+      zeroCounter = 0;
+    }
   }
 
   @Override
