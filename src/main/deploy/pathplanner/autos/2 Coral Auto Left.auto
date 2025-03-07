@@ -31,30 +31,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Intake to Reef K"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "deliverL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Reef K to Left Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "Left Intake to Reef L"
           }
         },
@@ -62,6 +38,12 @@
           "type": "named",
           "data": {
             "name": "deliverL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reset"
           }
         }
       ]

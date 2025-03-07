@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.336,
-        "y": 6.818
+        "x": 1.158,
+        "y": 6.77
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8493304519126752,
-        "y": 6.785901518995594
+        "x": 1.671330451912675,
+        "y": 6.737901518995594
       },
       "isLocked": false,
       "linkedName": "Left Intake"
@@ -64,10 +64,10 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 10.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 11.0,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 1000.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -79,7 +79,7 @@
   "folder": "3 Coral Auto Right",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 124.0
+    "rotation": 126.0
   },
   "useDefaultConstraints": true
 }

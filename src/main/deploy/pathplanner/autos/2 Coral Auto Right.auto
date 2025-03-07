@@ -41,27 +41,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Reef D to Right Intake"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Intake to Reef C"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "deliverL4"
+            "name": "reset"
           }
         }
       ]

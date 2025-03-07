@@ -8,37 +8,37 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.10123433415867,
-        "y": 5.362188783171054
+        "x": 6.479855283220114,
+        "y": 6.274353725185085
       },
       "isLocked": false,
       "linkedName": "Start Left"
     },
     {
       "anchor": {
-        "x": 5.391,
-        "y": 5.141
+        "x": 5.105,
+        "y": 5.306
       },
       "prevControl": {
-        "x": 5.600446695032168,
-        "y": 5.277499384394591
+        "x": 4.892553281656097,
+        "y": 5.15902499774195
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef I"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.4255216985049834,
+      "minWaypointRelativePos": 0.6137743978405316,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.75,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
+        "maxVelocity": 0.8,
+        "maxAcceleration": 11.0,
+        "maxAngularVelocity": 800.0,
+        "maxAngularAcceleration": 1000.0,
         "nominalVoltage": 12.0,
         "unlimited": false
       }
@@ -47,30 +47,30 @@
   "pointTowardsZones": [
     {
       "fieldPosition": {
-        "x": 5.0,
+        "x": 4.75,
         "y": 4.5
       },
       "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.11801806478405318,
-      "maxWaypointRelativePos": 0.65,
+      "minWaypointRelativePos": 0.25,
+      "maxWaypointRelativePos": 0.75,
       "name": "Point Towards Zone"
     }
   ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.5,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 11.0,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 1000.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "3 Coral Auto Right",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

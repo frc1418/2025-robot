@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.29,
-        "y": 2.85
+        "x": 5.297,
+        "y": 2.838
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.377001134920646,
-        "y": 2.521327511051639
+        "x": 5.383554820127506,
+        "y": 2.603461595655008
       },
       "isLocked": false,
       "linkedName": "Reef F"
@@ -20,12 +20,12 @@
         "y": 2.176267787388392
       },
       "prevControl": {
-        "x": 5.12766456850983,
-        "y": 2.283249370297352
+        "x": 5.152091708890484,
+        "y": 2.2823118572968375
       },
       "nextControl": {
-        "x": 4.551789313385635,
-        "y": 2.0105911798177005
+        "x": 4.495010368934996,
+        "y": 2.0040171533833586
       },
       "isLocked": false,
       "linkedName": null
@@ -36,24 +36,24 @@
         "y": 2.3753518240792415
       },
       "prevControl": {
-        "x": 3.5542545668470606,
-        "y": 2.5404660815631392
+        "x": 3.6036469230063943,
+        "y": 2.5573051778306866
       },
       "nextControl": {
-        "x": 1.347218218008632,
-        "y": 1.3355818279530973
+        "x": 1.424298251779769,
+        "y": 1.4302560773049209
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.336,
-        "y": 1.232
+        "x": 1.322,
+        "y": 1.28
       },
       "prevControl": {
-        "x": 1.1418698698969831,
-        "y": 1.0661921149663118
+        "x": 1.1239723638098904,
+        "y": 1.1274055856036744
       },
       "nextControl": null,
       "isLocked": false,
@@ -64,10 +64,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 2.382116866438356,
+      "minWaypointRelativePos": 2.2695052948504983,
       "maxWaypointRelativePos": 2.95,
       "constraints": {
-        "maxVelocity": 0.9,
+        "maxVelocity": 0.8,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -83,15 +83,26 @@
         "y": 0.5
       },
       "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.0,
+      "minWaypointRelativePos": 1.767078488372093,
       "maxWaypointRelativePos": 2.4,
       "name": "Point Towards Zone"
     }
   ],
   "eventMarkers": [
     {
+      "name": "reset",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "reset"
+        }
+      }
+    },
+    {
       "name": "intake",
-      "waypointRelativePos": 1.9341388081395348,
+      "waypointRelativePos": 2.2687266403654496,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -102,16 +113,16 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 10.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 11.0,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 1000.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -124.0
+    "rotation": -126.0
   },
   "reversed": false,
   "folder": "3 Coral Auto Right",
@@ -119,5 +130,5 @@
     "velocity": 0,
     "rotation": 119.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
