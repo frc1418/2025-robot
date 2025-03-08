@@ -1,0 +1,134 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.297,
+        "y": 2.838
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.383554820127506,
+        "y": 2.603461595655008
+      },
+      "isLocked": false,
+      "linkedName": "Reef F"
+    },
+    {
+      "anchor": {
+        "x": 4.901711164202009,
+        "y": 2.176267787388392
+      },
+      "prevControl": {
+        "x": 5.152091708890484,
+        "y": 2.2823118572968375
+      },
+      "nextControl": {
+        "x": 4.495010368934996,
+        "y": 2.0040171533833586
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.2518079485212055,
+        "y": 2.3753518240792415
+      },
+      "prevControl": {
+        "x": 3.6036469230063943,
+        "y": 2.5573051778306866
+      },
+      "nextControl": {
+        "x": 1.424298251779769,
+        "y": 1.4302560773049209
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.322,
+        "y": 1.28
+      },
+      "prevControl": {
+        "x": 1.1239723638098904,
+        "y": 1.1274055856036744
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right Intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.2695052948504983,
+      "maxWaypointRelativePos": 2.95,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 0.8,
+        "y": 0.5
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 1.767078488372093,
+      "maxWaypointRelativePos": 2.4,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "reset",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "reset"
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 2.2687266403654496,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 11.0,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 1000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -126.0
+  },
+  "reversed": false,
+  "folder": "3 Coral Auto Right",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "useDefaultConstraints": false
+}

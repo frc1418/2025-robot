@@ -1,0 +1,107 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.158,
+        "y": 6.774
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3706075517599567,
+        "y": 6.642478028700003
+      },
+      "isLocked": false,
+      "linkedName": "Left Intake"
+    },
+    {
+      "anchor": {
+        "x": 2.612941623263888,
+        "y": 6.20439308449074
+      },
+      "prevControl": {
+        "x": 2.043858424831618,
+        "y": 6.7235478262220125
+      },
+      "nextControl": {
+        "x": 4.25715365765706,
+        "y": 4.704435826187622
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.684,
+        "y": 5.196
+      },
+      "prevControl": {
+        "x": 3.45071225622444,
+        "y": 5.375759936096898
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef L"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.1697466777408638,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 0.9,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 4.0,
+        "y": 4.75
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.25,
+      "maxWaypointRelativePos": 0.75,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "reset",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "reset"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 11.0,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 1000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "reversed": false,
+  "folder": "3 Coral Auto Right",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 126.0
+  },
+  "useDefaultConstraints": false
+}

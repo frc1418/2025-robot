@@ -1,0 +1,85 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.322,
+        "y": 1.28
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.7062151770346015,
+        "y": 2.152580377398481
+      },
+      "isLocked": false,
+      "linkedName": "Right Intake"
+    },
+    {
+      "anchor": {
+        "x": 3.874,
+        "y": 2.734
+      },
+      "prevControl": {
+        "x": 2.859405585385214,
+        "y": 2.0931260798380222
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef D"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": 59.99999999999999
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8161077657807309,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "reset",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "reset"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 11.0,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 1000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "reversed": false,
+  "folder": "3 Coral Auto Right",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -126.0
+  },
+  "useDefaultConstraints": false
+}

@@ -101,6 +101,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final FieldSpaceOdometry fieldOdometry;
     private final TargetSpaceOdometry targetOdometry;
+    private ClimbSubsystem climbSubsystem;
 
     private Optional<SwerveModulePosition[]> swerveModulePositions;
 
@@ -124,11 +125,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     RobotConfig config;
 
-    public DriveSubsystem() {
+    public DriveSubsystem(ClimbSubsystem climbSubsystem) {
         swerveModulePositions = getModulePositions();
         ally = DriverStation.getAlliance();
         fieldOdometry = new FieldSpaceOdometry(getFirstModulePositions());
         targetOdometry = new TargetSpaceOdometry(getFirstModulePositions(), fieldOdometry);
+        this.climbSubsystem = climbSubsystem;
         resetLockRot();
 
         try{
@@ -225,7 +227,7 @@ public class DriveSubsystem extends SubsystemBase {
             ally = DriverStation.getAlliance();
         }
 
-        if(rotSpeed == 0 && fieldOdometry.isCorrectRot() && Math.abs(fieldOdometry.getGyroHeading().getDegrees() - lockedRot) < 180 && DriverStation.isTeleopEnabled()) {
+        if(rotSpeed == 0 && fieldOdometry.isCorrectRot() && Math.abs(fieldOdometry.getGyroHeading().getDegrees() - lockedRot) < 180 && DriverStation.isTeleopEnabled() && !climbSubsystem.isClimbing()) {
             if (Math.hypot(x, y) > 0.25) {
                 rotationController.setP(Math.hypot(x,y)*DriverConstants.correctiveFactor);
             }
@@ -273,6 +275,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void setFieldCentric(boolean fieldCentric) {
         this.fieldCentric = fieldCentric;
+    }
+
+    public int getAprilTagNumber() {
+      return fieldOdometry.getAprilTagNumber();
     }
 
     public boolean getFieldCentric() {

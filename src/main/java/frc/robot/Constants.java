@@ -12,8 +12,8 @@ public final class Constants {
 
     public static final double wheelPos = 0.33655;
 
-    public static final double DRIFT_DEADBAND = 0.15;
-    public static final double ROTATION_DEADBAND = 0.03;
+    public static final double DRIFT_DEADBAND = 0.1;
+    public static final double ROTATION_DEADBAND = 0.02;
 
     public static final int FRONT_LEFT_ANGLE_ID = 3;
     public static final int FRONT_LEFT_SPEED_ID = 4;
@@ -68,14 +68,15 @@ public final class Constants {
     public final static int ELEVATOR_MOTOR_2_ID = 10;
 
     public final static double ENCODER_SCALAR = 4.43;
-    public final static double HEIGHT_BUMP = 0.037;
+    public final static double ELEVATOR_OFFSET = 0.037;
 
-    public final static double kV = 0.15;
+    public final static double maxSpeed = 0.7;
+    public final static double kV = 0.11;
     public final static double kG = 0.15;
     public final static double kCoral = 0.025;
 
-    public final static double kP = 0.63;
-    public final static double kD = 0.25;
+    public final static double kP = 0.75;
+    public final static double kD = 0.2;
   }
 
   public final static class IntakeConstants {
@@ -84,19 +85,20 @@ public final class Constants {
 
   public final static class PivotConstants {
     public static final int TALON_MOTOR_ID = 1;
+    public final static double ENCODER_SCALAR = -1;
 
-    // Conversion factor from falcon motor rotations to radians of arm rotation
-    // -16 is roughly the gear ratio between the motor and the arm
-    public static final double pivotRotationsToArmRotations = -16;
-    // Starting point of arm when resting on hard stop
-    public static final double pivotOffsetFromStart = 0.25; //36 degrees up 22.2 percent elevator to intake
-    // kLeverage plus kG must be no less than -0.045 to keep falcon happy
-    public static final double kLeverage = 0.02;
+    public static final double PIVOT_OFFSET = 0.10611; //36 degrees up 22.2 percent elevator to intake
+    // kG plus kConstant must be no more than 0.04 to keep falcon happy
+    public final static double maxSpeed = 0.175;
+    public static final double pivotTolerance = 0.5;
+    public static final double kCoral = 0.01;
     public static final double kG = 0.02;
+    public static final double kConstant = 0.02;
+    public static final double kV = 0.011;
 
-    public final static double kP = 0.0001;
-    public final static double kI = 0.00005;
-    public final static double kD = 0.00025;
+    public final static double kP = 0.0016;
+    public final static double kI = 0;
+    public final static double kD = 0.0001;
   }
   public final static class PneumaticsConstants {
     public final static int PNEUMATICS_HUB_ID = 21;
@@ -108,14 +110,39 @@ public final class Constants {
     public final static int ATTACH_SOLENOID_FORWARD = 3;
   }
 
+  public final static class LedConstants {
+    public final static int BLINKIN_CHANNEL = 0;
+}
+
+public enum LedColor {
+  DONT_MOVE(-0.05), //RAINBOW TWINKLES
+  CORAL_IN(0.77), //GREEN
+  ALIGNED(-0.07), //STROBE GOLD
+  ALIGNING(0.67), //GOLD
+  BLUE_ALLIANCE(0.87), //BLUE
+  RED_ALLIANCE(0.61); //RED
+
+  private double color;
+
+  LedColor(double color) {
+      this.color = color;
+  }
+  
+  public double color() {
+      return color;
+  }
+
+}
+
   public final static class DriverConstants {
-    public final static double maxAccel = 1.5;
+    public final static double maxAccel = 2.5;
     public final static double maxSpeedMetersPerSecond = 4.8;
     public final static double maxAngularAccel = 0.075;
     public final static double maxAngularSpeed = 2*Math.PI;
     public final static double maxCorrectiveAngularSpeed = Math.PI;
     public final static double correctiveFactor = 0.16;
     public final static double baseCorrector = 0.04;
+    public final static double armOffset = 0.11;
   }
 
   public final static class WheelConstants {

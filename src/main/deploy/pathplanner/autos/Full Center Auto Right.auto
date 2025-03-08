@@ -7,7 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToIntake"
+            "pathName": "Start Center to Reef G"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "deliverL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef G to Right Intake"
           }
         },
         {
@@ -19,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IntakeToReef"
+            "pathName": "Right Intake to Reef B"
           }
         },
         {
@@ -31,31 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ReefToIntake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "IntakeToReef"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ReefToIntake"
+            "pathName": "Reef B to Right Intake"
           }
         }
       ]

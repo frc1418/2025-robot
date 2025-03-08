@@ -1,0 +1,70 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.126,
+        "y": 5.384
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.328302184150028,
+        "y": 5.237119687200333
+      },
+      "isLocked": false,
+      "linkedName": "Reef J"
+    },
+    {
+      "anchor": {
+        "x": 5.227600969587053,
+        "y": 5.633790806361606
+      },
+      "prevControl": {
+        "x": 5.441253110558626,
+        "y": 5.5039726155782525
+      },
+      "nextControl": {
+        "x": 4.675503136161478,
+        "y": 5.969253589672791
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.158,
+        "y": 6.77
+      },
+      "prevControl": {
+        "x": 0.7514208149155956,
+        "y": 6.8761391904483835
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 11.0,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 1000.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 126.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": -119.99999999999999
+  },
+  "useDefaultConstraints": true
+}

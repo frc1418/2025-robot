@@ -21,9 +21,8 @@ public class AlignRot extends Command {
     FieldSpaceOdometry odometry;
 
     CommandJoystick leftJoystick;
-    CommandJoystick rightJoystick;
 
-    double targetRot;
+    double targetRot = 0;
     double initialRotP = 0.01;
 
     Optional<Alliance> ally;

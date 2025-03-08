@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.297143118722098,
-        "y": 2.827588326590402
+        "x": 3.044664655412946,
+        "y": 3.889981951032366
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.545354194006059,
-        "y": 2.8574423398278186
+        "x": 3.4122458716457023,
+        "y": 4.520283004495541
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef B"
     },
     {
       "anchor": {
-        "x": 2.297143118722098,
-        "y": 5.6213448660714285
+        "x": 1.322,
+        "y": 1.28
       },
       "prevControl": {
-        "x": 2.1429196679986586,
-        "y": 5.424583266039932
+        "x": 1.179310754694781,
+        "y": 1.0216797058989178
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Intake"
     }
   ],
   "rotationTargets": [],
@@ -33,16 +33,16 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 11.0,
+    "maxAngularVelocity": 800.0,
+    "maxAngularAcceleration": 1000.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -126.0
   },
   "reversed": false,
   "folder": null,
