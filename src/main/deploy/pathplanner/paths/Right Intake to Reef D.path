@@ -16,24 +16,19 @@
     },
     {
       "anchor": {
-        "x": 3.866,
-        "y": 2.721
+        "x": 3.767,
+        "y": 2.778
       },
       "prevControl": {
-        "x": 2.851405585385214,
-        "y": 2.0801260798380223
+        "x": 2.7524055853852136,
+        "y": 2.1371260798380223
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Reef D"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.05,
-      "rotationDegrees": 45.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
@@ -49,7 +44,18 @@
       }
     }
   ],
-  "pointTowardsZones": [],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 4.2,
+        "y": 3.5
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 0.03411804401993353,
+      "maxWaypointRelativePos": 0.75,
+      "name": "Point Towards Zone"
+    }
+  ],
   "eventMarkers": [
     {
       "name": "reset",
