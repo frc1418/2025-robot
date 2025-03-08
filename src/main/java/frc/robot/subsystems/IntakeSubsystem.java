@@ -63,13 +63,6 @@ public class IntakeSubsystem extends SubsystemBase {
       }, this);
   }
 
-  public Command intakeInAuto() {
-    return new RunCommand(
-      () -> {
-        setIntake(0.5);
-      }, this);
-  }
-
   public void setIntake(double speed) {
     intakeMotor.set(speed);
   }

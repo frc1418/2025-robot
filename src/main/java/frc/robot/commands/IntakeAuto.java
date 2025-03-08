@@ -23,14 +23,14 @@ public class IntakeAuto extends SequentialCommandGroup {
         Commands.waitUntil(intakeSubsystem::getHasCoral), 
         pivotSubsystem.setPivot(36),
         elevatorSubsystem.moveElevatorToHeight(0.25),
-        intakeSubsystem.intakeInAuto()),
+        intakeSubsystem.intakeIn()),
       Commands.deadline(
         Commands.waitUntil(pivotSubsystem::isSafe), 
         pivotSubsystem.setPivot(85),
         elevatorSubsystem.smoothControl(0.125),
         intakeSubsystem.holdIntake()),
       ledSubsystem.allianceColor(),
-      Commands.waitUntil(robot::isAutonomous)
+      Commands.waitUntil(robot::isAutonomous)    
     );
   }
 }
