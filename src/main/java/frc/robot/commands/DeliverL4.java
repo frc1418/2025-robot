@@ -25,7 +25,7 @@ public class DeliverL4 extends SequentialCommandGroup {
         pivotSubsystem.setPivot(60),
         elevatorSubsystem.moveElevatorToHeight(1.15)),
       Commands.deadline(
-        Commands.waitSeconds(0.5),
+        Commands.waitSeconds(0.6),
         pivotSubsystem.setPivot(-50)),
       Commands.deadline(
         Commands.waitSeconds(0.2), 
