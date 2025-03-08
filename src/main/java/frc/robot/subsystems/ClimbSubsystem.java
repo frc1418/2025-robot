@@ -28,8 +28,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
   PneumaticHub ph = new PneumaticHub(PneumaticsConstants.PNEUMATICS_HUB_ID);
 
-  private DigitalInput switch1 = new DigitalInput(2);
-  private DigitalInput switch2 = new DigitalInput(3);
+  private DigitalInput switch1 = new DigitalInput(0);
+  private DigitalInput switch2 = new DigitalInput(1);
 
   private DoubleSolenoid climbSolenoid = new DoubleSolenoid(
     PneumaticsConstants.PNEUMATICS_HUB_ID, 
