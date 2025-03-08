@@ -22,7 +22,7 @@ public class IntakeAuto extends SequentialCommandGroup {
       Commands.deadline(
         Commands.waitUntil(intakeSubsystem::getHasCoral), 
         pivotSubsystem.setPivot(36),
-        elevatorSubsystem.moveElevatorToHeight(0.255),
+        elevatorSubsystem.moveElevatorToHeight(0.25),
         intakeSubsystem.intakeIn()),
       Commands.deadline(
         Commands.waitUntil(pivotSubsystem::isSafe), 

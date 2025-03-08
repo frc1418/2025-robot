@@ -28,8 +28,6 @@ public class ResetAuto extends SequentialCommandGroup {
           pivotSubsystem.setPivot(95),
           elevatorSubsystem.moveElevatorToHeight(-0.1)),
       ledSubsystem.allianceColor(),
-      Commands.waitSeconds(0.3), 
-      elevatorSubsystem.reZero(),
       Commands.waitUntil(robot::isAutonomous)
     );
   }

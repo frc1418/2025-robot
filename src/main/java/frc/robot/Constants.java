@@ -71,11 +71,11 @@ public final class Constants {
     public final static double ELEVATOR_OFFSET = 0.037;
 
     public final static double maxSpeed = 0.7;
-    public final static double kV = 0.1;
-    public final static double kG = 0.125;
+    public final static double kV = 0.11;
+    public final static double kG = 0.15;
     public final static double kCoral = 0.025;
 
-    public final static double kP = 0.725;
+    public final static double kP = 0.75;
     public final static double kD = 0.2;
   }
 

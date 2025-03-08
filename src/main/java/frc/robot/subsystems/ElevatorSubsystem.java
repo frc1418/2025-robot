@@ -30,6 +30,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private final NetworkTableEntry ntElevatorHeight = table.getEntry("elevatorHeight");
   private final NetworkTableEntry ntElevatorSpeed = table.getEntry("elevatorSpeed");
+  private final NetworkTableEntry ntElevatorAtBottom = table.getEntry("elevatorAtBottom");
 
   private final SparkMax motor1 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
   private final SparkMax motor2 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
@@ -37,7 +38,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final AbsoluteEncoder elevatorEncoder;
   private IntakeSubsystem intakeSubsystem;
 
-  private DigitalInput zeroSwitch = new DigitalInput(4);
+  private DigitalInput zeroSwitch = new DigitalInput(9);
   private double zeroCounter= 0;
 
   private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
@@ -157,9 +158,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public Command reZero() {
     return Commands.runOnce(() -> {
-      System.out.println("ELEVATOR ZEROED");
-      initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
+      zero();
     });
+  }
+
+  public void zero() {
+    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
   }
 
   public Command smoothControl(double smoothValue) {
@@ -172,10 +176,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     updateElevator();
     updateFF();
+    ntElevatorAtBottom.setBoolean(zeroSwitch.get());
     if (zeroSwitch.get()) {
       zeroCounter++;
       if (zeroCounter > 10) {
-        reZero();
+        zero();
         zeroCounter = 0;
       }
     }
