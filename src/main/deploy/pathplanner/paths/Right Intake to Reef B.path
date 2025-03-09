@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.322,
-        "y": 1.28
+        "x": 1.31,
+        "y": 1.264
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5770788193063003,
-        "y": 1.7101151556571914
+        "x": 1.5650788193063003,
+        "y": 1.6941151556571914
       },
       "isLocked": false,
       "linkedName": "Right Intake"
