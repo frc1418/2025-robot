@@ -192,7 +192,7 @@ public class RobotContainer {
     altJoystick.pov(270).onTrue(Commands.runOnce(() -> {
       if (manualMode) {
         adjustIntakeSide(-0.01);
-      }}));                                                                                                                                                                                                                                                                               
+      }}));
   }
 
   public double applyDeadband(double input, double deadband) {
