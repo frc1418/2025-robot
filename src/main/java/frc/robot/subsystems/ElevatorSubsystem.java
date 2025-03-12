@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -36,6 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax motor2 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
   private final AbsoluteEncoder elevatorEncoder;
+  private final RelativeEncoder encoder = motor1.getEncoder();
   private IntakeSubsystem intakeSubsystem;
 
   private DigitalInput zeroSwitch = new DigitalInput(9);
@@ -52,6 +54,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public ElevatorSubsystem(IntakeSubsystem intakeSubsystem) {
     motorConfig.idleMode(IdleMode.kBrake);
+    motorConfig.encoder.positionConversionFactor(1.0/6.0);
     motor1.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorEncoder = motor1.getAbsoluteEncoder();
@@ -132,17 +135,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void updateElevator() {
-    double rawPosition = elevatorEncoder.getPosition();
-    double deltaHeight = rawPosition - lastHeight;
-    while (deltaHeight < -0.5) {
-      deltaHeight += 1;
-    }
-    while (deltaHeight > 0.5) {
-      deltaHeight -= 1;
-    }
-    lastHeight += deltaHeight;
-    double normalizedHeight = lastHeight/encoderScalar;
-    heightValue = normalizedHeight - initialHeight;
+    heightValue = (encoder.getPosition()/4.52);
     ntElevatorHeight.setDouble(heightValue);
     ntElevatorSpeed.setDouble(elevatorEncoder.getVelocity());
   }
@@ -163,7 +156,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void zero() {
-    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
+    // initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
+    encoder.setPosition(0);
   }
 
   public Command smoothControl(double smoothValue) {
