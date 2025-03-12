@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.31,
-        "y": 1.264
+        "x": 1.295,
+        "y": 1.244
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6942151770346014,
-        "y": 2.136580377398481
+        "x": 2.6792151770346013,
+        "y": 2.116580377398481
       },
       "isLocked": false,
       "linkedName": "Right Intake"
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8416606104651163,
+      "minWaypointRelativePos": 0.8849667774086378,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.85,
