@@ -185,15 +185,6 @@ public class FieldSpaceOdometry {
           }
         }
       }
-
-      if (!correctRot) {
-          findRotError();
-          frameCount++;
-          if (frameCount > 25) {
-            correctError();
-            frameCount = 0;
-          }
-      }
     }
     ntX.setDouble(poseEstimator.getEstimatedPosition().getX());
     ntY.setDouble(poseEstimator.getEstimatedPosition().getY());

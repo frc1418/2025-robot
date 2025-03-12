@@ -22,14 +22,11 @@ public class ClimbSubsystem extends SubsystemBase {
 
   private final NetworkTableEntry ntClimbPistons = table.getEntry("footExtended");
   private final NetworkTableEntry ntAttachPistons = table.getEntry("handsExtended");
-  private final NetworkTableEntry ntHandPistonsAttached = table.getEntry("handsAttached");
   private final NetworkTableEntry ntPressure = table.getEntry("pressure");
 
 
   PneumaticHub ph = new PneumaticHub(PneumaticsConstants.PNEUMATICS_HUB_ID);
 
-  private DigitalInput switch1 = new DigitalInput(0);
-  private DigitalInput switch2 = new DigitalInput(1);
 
   private DoubleSolenoid climbSolenoid = new DoubleSolenoid(
     PneumaticsConstants.PNEUMATICS_HUB_ID, 
@@ -98,7 +95,6 @@ public class ClimbSubsystem extends SubsystemBase {
     ntClimbPistons.setBoolean(climbPistonsOut);
     ntAttachPistons.setBoolean(!attachPistonsOut);
     ntPressure.setDouble(ph.getPressure(0));
-    ntHandPistonsAttached.setBoolean(switch1.get() && switch2.get());
   }
 
   @Override
