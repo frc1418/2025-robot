@@ -46,9 +46,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
   private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.85);
 
-  private double encoderScalar = ElevatorConstants.ENCODER_SCALAR;
-  private double lastHeight;
-  private double initialHeight;
   private double heightValue;
   private double kG = ElevatorConstants.kG;
 
@@ -58,8 +55,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     motor1.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorEncoder = motor1.getAbsoluteEncoder();
-    lastHeight = elevatorEncoder.getPosition();
-    initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
     this.intakeSubsystem = intakeSubsystem;
   }
 
