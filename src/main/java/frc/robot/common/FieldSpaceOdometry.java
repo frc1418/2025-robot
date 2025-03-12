@@ -40,8 +40,6 @@ public class FieldSpaceOdometry {
   private boolean correctRot = true;
   private boolean rotJustCorrected = false;
 
-  private int frameCount = 0;
-
   private Rotation2d gyroOffset = new Rotation2d(0);
 
   private LimelightHelpers.PoseEstimate poseFromAprilTags;
