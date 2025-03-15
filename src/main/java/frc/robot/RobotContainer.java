@@ -4,8 +4,8 @@
 
 package frc.robot;
 
-import frc.robot.commands.AlignByFieldPose;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.commands.AlignByFieldPose;
 import frc.robot.commands.DeliverL1;
 import frc.robot.commands.DeliverL2;
 import frc.robot.commands.DeliverL3;
@@ -22,6 +22,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import java.util.Set;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -34,6 +35,21 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 public class RobotContainer {
+
+  private enum ControllerMode {
+    AUTO("Auto"),
+    MANUAL("Manual"),
+    ADJUSTMENT("Adjustmsent");
+
+    private final String name;
+    ControllerMode(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+  }
   
   private final SendableChooser<Command> autoChooser;
 
@@ -48,13 +64,9 @@ public class RobotContainer {
   CommandJoystick rightJoystick = new CommandJoystick(1);
   CommandJoystick altJoystick = new CommandJoystick(2);
 
-  // private final AlignByAprilTagLL alignByAprilTagLL = new AlignByAprilTagLL(driveSubsystem, 0.0, -1.75, 0.3, 0.1, 0.1, 0);
-  // private final AlignByFieldPose alignByReefB = new AlignByFieldPose(driveSubsystem, 14.443, 4.12, 180, 0.5, 0, 0.1, 3);
-  // L4 back offset 0.553
-  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.54, 0, 0.5, 0, 0.1, 0, 3, true);
-  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.54 , 0, 0.5, 0, 0.1, 0, 3, false);
-  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.585, 0, 0.5, 0, 0.1, 0, 3, false);
-  // private final AlignByFieldPose alignByRightIntake = new AlignByFieldPose(driveSubsystem, 15.328, 4.45, 53.33, 0.5, 0, 0.1, 3);
+  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, -0.22, 0.54, 0, 0.5, 0, 0.1, 0, 3);
+  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.54 , 0, 0.5, 0, 0.1, 0, 3);
+  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.585, 0, 0.5, 0, 0.1, 0, 3);
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
 
@@ -67,7 +79,24 @@ public class RobotContainer {
   private final Reset reset;
   private final ResetAuto resetAuto;
 
-  private Boolean manualMode = false;
+  private enum AlignmentType {
+    LEFT_DELIVERY("Left Delivery"),
+    RIGHT_DELIVERY("Right Delivery"),
+    INTAKE("Intake");
+
+    private final String name;
+
+    AlignmentType(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+  }
+
+  private ControllerMode controllerMode = ControllerMode.AUTO;
+  private AlignmentType alignmentType = AlignmentType.INTAKE;
   
   public RobotContainer(RobotBase robot) {
     deliverL4 = new DeliverL4(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
@@ -129,70 +158,73 @@ public class RobotContainer {
     rightJoystick.pov(0).whileTrue(alignRotForward);
     rightJoystick.pov(180).whileTrue(alignRotBackward);
 
-    altJoystick.button(1).whileTrue(checkManualMode(Commands.none(), elevatorSubsystem.runElevator(-0.2)));
+    altJoystick.button(1).whileTrue(checkMode(
+      elevatorSubsystem.runElevator(-0.2), 
+      pivotSubsytem.zeroPivot(), 
+      Commands.none()));
     altJoystick.button(1).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustDeliverBack(0.01);
-      }}));
-    altJoystick.button(2).whileTrue(checkManualMode(Commands.none(), deliverL3));
+      if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
+        adjustBackAlignment(0.01);
+      }
+    }));
+    altJoystick.button(2).whileTrue(checkMode(
+      Commands.none(), 
+      deliverL3, 
+      Commands.none()));
     altJoystick.button(2).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustDeliverSide(0.01);
-      }}));
-    altJoystick.button(3).whileTrue(checkManualMode(Commands.none(), elevatorSubsystem.runElevator(0.2)));
+      if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
+        adjustSideOffset(0.01);
+      }
+    }));
+    altJoystick.button(2).onFalse(ledSubsystem.allianceColor());
+    altJoystick.button(3).whileTrue(checkMode(
+      elevatorSubsystem.runElevator(0.2), 
+      deliverL2, 
+      Commands.none()));
     altJoystick.button(3).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustDeliverSide(-0.01);
-      }}));
-    altJoystick.button(4).whileTrue(checkManualMode(Commands.none(), reset));
+      if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
+        adjustSideOffset(-0.01);
+      }
+    }));
+    altJoystick.button(3).onFalse(ledSubsystem.allianceColor());
+    altJoystick.button(4).whileTrue(checkMode(
+      Commands.none(), 
+      reset, 
+      Commands.none()));
     altJoystick.button(4).onFalse(ledSubsystem.allianceColor());
-    altJoystick.button(4).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustDeliverBack(-0.01);
-      }}));
-    altJoystick.button(5).whileTrue(checkManualMode(
+    altJoystick.button(1).onTrue(Commands.runOnce(() -> {
+      if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
+        adjustBackAlignment(-0.01);
+      }
+    }));
+    altJoystick.button(5).whileTrue(checkMode(
       pivotSubsytem.pivot(0.075),
-      intake));
+      intake,
+      Commands.none()));
     altJoystick.button(5).onFalse(ledSubsystem.allianceColor());
-    altJoystick.button(6).whileTrue(checkManualMode(
-      pivotSubsytem.pivot(-0.075), 
-      deliverL4));
+    altJoystick.button(6).whileTrue(checkMode(
+      pivotSubsytem.pivot(-0.075),
+      deliverL4,
+      Commands.none()));
     altJoystick.button(6).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(8).onTrue(toggleManualMode());
     altJoystick.button(9).onTrue(Commands.runOnce(() -> {
-      if (!manualMode) {
         climbSubsystem.attachToggle();
-      }}));
-    altJoystick.button(9).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustArmOffset(0.01);
-      }}));
+      }));
     altJoystick.button(10).onTrue(Commands.runOnce(() -> {
-      if (!manualMode) {
         climbSubsystem.climbToggle();
-      }}));    
-    altJoystick.button(10).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustArmOffset(-0.01);
-      }}));    
-    altJoystick.pov(0).whileTrue(checkManualMode(Commands.none(), intakeSubsystem.intakeOut()));
-    altJoystick.pov(0).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustIntakeBack(-0.01);
-      }}));
+      }));
+    altJoystick.pov(0).whileTrue(checkMode(intakeSubsystem.intakeOut(), intakeSubsystem.intakeOut(), Commands.none()));
     altJoystick.pov(90).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustIntakeSide(0.01);
-      }}));
-    altJoystick.pov(180).whileTrue(checkManualMode(Commands.none(), intakeSubsystem.intakeIn()));      
+      toggleAlignmentMode(AlignmentType.RIGHT_DELIVERY);
+      }));
+    altJoystick.pov(180).whileTrue(checkMode(intakeSubsystem.intakeIn(), Commands.none(), Commands.none()));
     altJoystick.pov(180).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustIntakeBack(0.01);
-      }}));           
+      toggleAlignmentMode(AlignmentType.INTAKE);
+      }));
     altJoystick.pov(270).onTrue(Commands.runOnce(() -> {
-      if (manualMode) {
-        adjustIntakeSide(-0.01);
-      }}));
+      toggleAlignmentMode(AlignmentType.LEFT_DELIVERY);
+      }));
   }
 
   public double applyDeadband(double input, double deadband) {
@@ -206,10 +238,30 @@ public class RobotContainer {
     driveSubsystem.resetLockRot();
   }
 
+  public Command toggleAlignmentMode(AlignmentType alignmentType) {
+    return Commands.runOnce(() -> {
+      if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
+        controllerMode = ControllerMode.AUTO;
+      }
+      else {
+        controllerMode = ControllerMode.ADJUSTMENT;
+        this.alignmentType = alignmentType;
+      }
+      System.out.println("Controller Mode: " + controllerMode.getName());
+      this.alignmentType = alignmentType;
+      System.out.println("Alignment Type: " + alignmentType.getName());
+    }); 
+  }
+
   public Command toggleManualMode() {
     return Commands.runOnce(() -> {
-      manualMode = !manualMode;
-      System.out.println("Manual mode: " + manualMode);
+      if (ControllerMode.AUTO.equals(controllerMode) || ControllerMode.ADJUSTMENT.equals(controllerMode)) {
+        controllerMode = ControllerMode.MANUAL;
+      }
+      else {
+        controllerMode = ControllerMode.AUTO;
+      }
+      System.out.println("Controller Mode: " + controllerMode.getName());
     });
   }
 
@@ -228,40 +280,55 @@ public class RobotContainer {
     });
   }
 
-  public void adjustIntakeSide(double offset) {
-    alignByIntake.adjustSideOffset(offset, "Intake");
+  public void adjustSideOffset(double offset) {
+    switch (alignmentType) {
+      case LEFT_DELIVERY:
+      alignByReefLeft.adjustSideOffset(offset, alignmentType.getName());
+      break;
+      case RIGHT_DELIVERY:
+      alignByReefRight.adjustSideOffset(offset, alignmentType.getName());
+      break;
+      case INTAKE:
+      alignByIntake.adjustSideOffset(offset, alignmentType.getName());
+      break;
+    }
   }
 
-  public void adjustIntakeBack(double offset) {
-    alignByIntake.adjustBackOffset(offset, "Intake");
+  public void adjustBackAlignment(double offset) {
+    switch (alignmentType) {
+      case LEFT_DELIVERY:
+      alignByReefLeft.adjustBackOffset(offset, alignmentType.getName());
+      break;
+      case RIGHT_DELIVERY:
+      alignByReefRight.adjustBackOffset(offset, alignmentType.getName());
+      break;
+      case INTAKE:
+      alignByIntake.adjustBackOffset(offset, alignmentType.getName());
+      break;
+    }  
   }
 
-  public void adjustDeliverSide(double offset) {
-    alignByReefLeft.adjustSideOffset(offset, "DeliverLeft");
-    alignByReefRight.adjustSideOffset(offset, "DeliverRight");
-  }
 
-  public void adjustDeliverBack(double offset) {
-    alignByReefLeft.adjustBackOffset(offset, "DeliverLeft");
-    alignByReefRight.adjustBackOffset(offset, "DeliverRight");
-  }
-
-  public void adjustArmOffset(double offset) {
-    alignByReefLeft.adjustArmOffset(offset, "Deliver Left");
-  }
-
-  public Command checkManualMode(Command manualCommand, Command autoCommand) {
+  public Command checkMode(Command manualCommand, Command autoCommand, Command adjustmentCommand) {
     return new RunCommand(() -> {
-      if (manualMode & !manualCommand.isScheduled()) {
+      if (ControllerMode.MANUAL.equals(controllerMode) && !manualCommand.isScheduled()) {
         manualCommand.schedule();
       }
-      else if (!manualMode & !autoCommand.isScheduled()){
+      else if (ControllerMode.AUTO.equals(controllerMode) && !autoCommand.isScheduled()){
         autoCommand.schedule();
+      }
+      else if (ControllerMode.ADJUSTMENT.equals(controllerMode) && !adjustmentCommand.isScheduled()){
+        adjustmentCommand.schedule();
       }
     }).finallyDo(interupted -> {
       manualCommand.cancel();
       autoCommand.cancel();
+      adjustmentCommand.cancel();
     });
+  }
+
+  public void resetPivot() {
+    pivotSubsytem.zero();
   }
 
   public Command getAutonomousCommand() {
