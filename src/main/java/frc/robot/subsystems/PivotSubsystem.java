@@ -74,8 +74,12 @@ public class PivotSubsystem extends SubsystemBase {
     }
   }
 
-  public void resetPivot() {
+  public void resetPivotController() {
     pivotController.reset();
+  }
+
+  public void zero() {
+    lastPivot = pivotEncoder.get()-1;
   }
 
   public void updatePivot() {
@@ -140,6 +144,13 @@ public class PivotSubsystem extends SubsystemBase {
     return Commands.runOnce(
       () -> {
         pivotController.reset();
+      }, this);
+  }
+
+  public Command zeroPivot() {
+    return Commands.runOnce(
+      () -> {
+        zero();
       }, this);
   }
 
