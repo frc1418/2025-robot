@@ -27,7 +27,7 @@ public class PivotSubsystem extends SubsystemBase {
   private final NetworkTable table = ntInstance.getTable("/components/pivot");
   private final NetworkTableEntry ntPivotAmount = table.getEntry("pivotAmountDegrees");
 
-  private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(6);
+  private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(7);
 
   private double lastPivot;
   private double initialPivot = PivotConstants.PIVOT_OFFSET;
@@ -79,7 +79,8 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public void zero() {
-    lastPivot = pivotEncoder.get()-1;
+    lastPivot = pivotEncoder.get() - 1;
+    initialPivot = (lastPivot / encoderScalar) - (90.0 / 360.0);
   }
 
   public void updatePivot() {

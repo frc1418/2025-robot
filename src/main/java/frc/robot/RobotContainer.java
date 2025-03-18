@@ -66,7 +66,7 @@ public class RobotContainer {
 
   private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, -0.22, 0.54, 0, 0.5, 0, 0.1, 0, 3);
   private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.54 , 0, 0.5, 0, 0.1, 0, 3);
-  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.585, 0, 0.5, 0, 0.1, 0, 3);
+  private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.685, 0, 0.5, 0, 0.1, 0, 3);
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
 
@@ -192,7 +192,7 @@ public class RobotContainer {
       reset, 
       Commands.none()));
     altJoystick.button(4).onFalse(ledSubsystem.allianceColor());
-    altJoystick.button(1).onTrue(Commands.runOnce(() -> {
+    altJoystick.button(4).onTrue(Commands.runOnce(() -> {
       if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
         adjustBackAlignment(-0.01);
       }
@@ -215,16 +215,10 @@ public class RobotContainer {
         climbSubsystem.climbToggle();
       }));
     altJoystick.pov(0).whileTrue(checkMode(intakeSubsystem.intakeOut(), intakeSubsystem.intakeOut(), Commands.none()));
-    altJoystick.pov(90).onTrue(Commands.runOnce(() -> {
-      toggleAlignmentMode(AlignmentType.RIGHT_DELIVERY);
-      }));
+    altJoystick.pov(90).onTrue(toggleAlignmentMode(AlignmentType.RIGHT_DELIVERY));
     altJoystick.pov(180).whileTrue(checkMode(intakeSubsystem.intakeIn(), Commands.none(), Commands.none()));
-    altJoystick.pov(180).onTrue(Commands.runOnce(() -> {
-      toggleAlignmentMode(AlignmentType.INTAKE);
-      }));
-    altJoystick.pov(270).onTrue(Commands.runOnce(() -> {
-      toggleAlignmentMode(AlignmentType.LEFT_DELIVERY);
-      }));
+    altJoystick.pov(180).onTrue(toggleAlignmentMode(AlignmentType.INTAKE));
+    altJoystick.pov(270).onTrue(toggleAlignmentMode(AlignmentType.LEFT_DELIVERY));
   }
 
   public double applyDeadband(double input, double deadband) {
