@@ -90,7 +90,7 @@
   ],
   "eventMarkers": [
     {
-      "name": "reset",
+      "name": "resetL4",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
