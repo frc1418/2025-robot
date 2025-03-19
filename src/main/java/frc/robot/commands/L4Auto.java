@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class DeliverL4 extends SequentialCommandGroup {
-  public DeliverL4(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
+public class L4Auto extends SequentialCommandGroup {
+  public L4Auto(PivotSubsystem pivotSubsystem, ElevatorSubsystem elevatorSubsystem, IntakeSubsystem intakeSubsystem, LedSubsystem ledSubsystem, RobotBase robot) {
     addRequirements(pivotSubsystem, elevatorSubsystem, intakeSubsystem);
     addCommands(
       ledSubsystem.dontMoveColor(),
@@ -36,16 +36,7 @@ public class DeliverL4 extends SequentialCommandGroup {
         Commands.waitUntil(elevatorSubsystem::isMiddle), 
         intakeSubsystem.holdIntake(), 
         pivotSubsystem.setPivot(70),
-        elevatorSubsystem.moveElevatorToHeight(0.23)),
-      Commands.deadline(
-        Commands.waitUntil(elevatorSubsystem::isKindaLow), 
-        pivotSubsystem.setPivot(95),
-        elevatorSubsystem.moveElevatorToHeight(0.23)),
-      ledSubsystem.allianceColor(),
-      Commands.deadline(
-      Commands.waitUntil(robot::isAutonomous),
-      pivotSubsystem.setPivot(95),
-      elevatorSubsystem.moveElevatorToHeight(0.23))
+        elevatorSubsystem.moveElevatorToHeight(0.23))
     );
   }
 }

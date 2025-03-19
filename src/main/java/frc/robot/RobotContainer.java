@@ -10,8 +10,10 @@ import frc.robot.commands.DeliverL1;
 import frc.robot.commands.DeliverL2;
 import frc.robot.commands.DeliverL3;
 import frc.robot.commands.DeliverL4;
+import frc.robot.commands.DropFromL4;
 import frc.robot.commands.Intake;
 import frc.robot.commands.IntakeAuto;
+import frc.robot.commands.L4Auto;
 import frc.robot.commands.Reset;
 import frc.robot.commands.ResetAuto;
 import frc.robot.commands.AlignRot;
@@ -70,6 +72,8 @@ public class RobotContainer {
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
 
+  private final L4Auto l4Auto;
+  private final DropFromL4 dropFromL4;
   private final DeliverL4 deliverL4;
   private final DeliverL3 deliverL3;
   private final DeliverL2 deliverL2;
@@ -99,6 +103,8 @@ public class RobotContainer {
   private AlignmentType alignmentType = AlignmentType.INTAKE;
   
   public RobotContainer(RobotBase robot) {
+    l4Auto = new L4Auto(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
+    dropFromL4 = new DropFromL4(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
     deliverL4 = new DeliverL4(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
     deliverL3 = new DeliverL3(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
     deliverL2 = new DeliverL2(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
@@ -117,7 +123,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("deliverL1", deliverL1);
     NamedCommands.registerCommand("deliverL2", deliverL2);
     NamedCommands.registerCommand("deliverL3", deliverL3);
-    NamedCommands.registerCommand("deliverL4", deliverL4);
+    NamedCommands.registerCommand("deliverL4", l4Auto);
+    NamedCommands.registerCommand("resetL4", dropFromL4);
     NamedCommands.registerCommand("intake", intakeAuto);
     NamedCommands.registerCommand("reset", resetAuto);
     NamedCommands.registerCommand("zeroElevator", elevatorSubsystem.reZero());

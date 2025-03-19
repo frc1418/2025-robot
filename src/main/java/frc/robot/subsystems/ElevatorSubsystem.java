@@ -104,13 +104,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     return heightValue < 0.26;
   }
 
+  public Boolean isKindaLowAuto() {
+    return heightValue < 0.3;
+  }
+
   public Boolean isLow() {
     return heightValue < 0.05;
   }
 
   public void moveElevator(double speed) {
     speed = speedLimiter.calculate(speed);
-    System.out.println("Speed: " + speed);
     motor1.set(speed);
     motor2.set(speed);
   }
