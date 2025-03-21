@@ -18,14 +18,12 @@ public class L4Auto extends SequentialCommandGroup {
     addCommands(
       ledSubsystem.dontMoveColor(),
       Commands.deadline(
-        Commands.waitSeconds(0.01),
-        elevatorSubsystem.smoothControl(-0.01)),
-      Commands.deadline(
-        Commands.waitSeconds(1.4), 
+        Commands.waitUntil(elevatorSubsystem::isTop),
         pivotSubsystem.setPivot(60),
         elevatorSubsystem.moveElevatorToHeight(1.1)),
       Commands.deadline(
         Commands.waitSeconds(0.7),
+        elevatorSubsystem.moveElevatorToHeight(1.1),
         pivotSubsystem.setPivot(-50)),
       Commands.deadline(
         Commands.waitSeconds(0.4), 

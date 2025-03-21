@@ -93,7 +93,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public Boolean isTop() {
-    return heightValue > 1.02;
+    return heightValue > 0.99;
   }
 
   public Boolean isMiddle() {
@@ -101,11 +101,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public Boolean isKindaLow() {
+    //TODO: Raise value to speed up elevator dropping
     return heightValue < 0.26;
   }
 
   public Boolean isKindaLowAuto() {
-    return heightValue < 0.3;
+    return heightValue < 0.33;
   }
 
   public Boolean isLow() {

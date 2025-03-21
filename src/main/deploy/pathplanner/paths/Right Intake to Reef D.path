@@ -67,6 +67,17 @@
           "name": "reset"
         }
       }
+    },
+    {
+      "name": "startL4",
+      "waypointRelativePos": 0.616577553986711,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "startL4"
+        }
+      }
     }
   ],
   "globalConstraints": {

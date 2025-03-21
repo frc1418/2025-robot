@@ -16,6 +16,7 @@ import frc.robot.commands.IntakeAuto;
 import frc.robot.commands.L4Auto;
 import frc.robot.commands.Reset;
 import frc.robot.commands.ResetAuto;
+import frc.robot.commands.StartL4Auto;
 import frc.robot.commands.AlignRot;
 import frc.robot.subsystems.ClimbSubsystem;  
 import frc.robot.subsystems.DriveSubsystem;
@@ -73,6 +74,7 @@ public class RobotContainer {
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
 
   private final L4Auto l4Auto;
+  private final StartL4Auto startL4Auto;
   private final DropFromL4 dropFromL4;
   private final DeliverL4 deliverL4;
   private final DeliverL3 deliverL3;
@@ -113,6 +115,7 @@ public class RobotContainer {
     intakeAuto = new IntakeAuto(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
     reset = new Reset(pivotSubsytem, elevatorSubsystem, ledSubsystem, robot);
     resetAuto = new ResetAuto(pivotSubsytem, elevatorSubsystem, ledSubsystem, robot);
+    startL4Auto = new StartL4Auto(pivotSubsytem, elevatorSubsystem, intakeSubsystem, ledSubsystem, robot);
 
     NamedCommands.registerCommand("elevatorIntake", elevatorSubsystem.moveElevatorToHeight(0.222));
     NamedCommands.registerCommand("elevatorDeliver", elevatorSubsystem.moveElevatorToHeight(1.01));
@@ -128,6 +131,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", intakeAuto);
     NamedCommands.registerCommand("reset", resetAuto);
     NamedCommands.registerCommand("zeroElevator", elevatorSubsystem.reZero());
+    NamedCommands.registerCommand("startL4", startL4Auto);
 
     configureBindings();
 
@@ -222,10 +226,22 @@ public class RobotContainer {
         climbSubsystem.climbToggle();
       }));
     altJoystick.pov(0).whileTrue(checkMode(intakeSubsystem.intakeOut(), intakeSubsystem.intakeOut(), Commands.none()));
-    altJoystick.pov(90).onTrue(toggleAlignmentMode(AlignmentType.RIGHT_DELIVERY));
+    altJoystick.pov(90).onTrue(Commands.runOnce(() -> {
+      if (!ControllerMode.MANUAL.equals(controllerMode)) {
+        toggleAlignmentMode(AlignmentType.RIGHT_DELIVERY);
+      }})
+    );
     altJoystick.pov(180).whileTrue(checkMode(intakeSubsystem.intakeIn(), Commands.none(), Commands.none()));
-    altJoystick.pov(180).onTrue(toggleAlignmentMode(AlignmentType.INTAKE));
-    altJoystick.pov(270).onTrue(toggleAlignmentMode(AlignmentType.LEFT_DELIVERY));
+    altJoystick.pov(180).onTrue(Commands.runOnce(() -> {
+      if (!ControllerMode.MANUAL.equals(controllerMode)) {
+        toggleAlignmentMode(AlignmentType.INTAKE);
+      }})
+    );
+    altJoystick.pov(270).onTrue(Commands.runOnce(() -> {
+      if (!ControllerMode.MANUAL.equals(controllerMode)) {
+        toggleAlignmentMode(AlignmentType.LEFT_DELIVERY);
+      }})
+    );
   }
 
   public double applyDeadband(double input, double deadband) {
@@ -239,7 +255,20 @@ public class RobotContainer {
     driveSubsystem.resetLockRot();
   }
 
-  public Command toggleAlignmentMode(AlignmentType alignmentType) {
+  public void toggleAlignmentMode(AlignmentType alignmentType) {
+    if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
+      controllerMode = ControllerMode.AUTO;
+    }
+    else {
+      controllerMode = ControllerMode.ADJUSTMENT;
+      this.alignmentType = alignmentType;
+    }
+    System.out.println("Controller Mode: " + controllerMode.getName());
+    this.alignmentType = alignmentType;
+    System.out.println("Alignment Type: " + alignmentType.getName());
+  }
+
+  public Command toggleAlignmentModeCommand(AlignmentType alignmentType) {
     return Commands.runOnce(() -> {
       if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
         controllerMode = ControllerMode.AUTO;

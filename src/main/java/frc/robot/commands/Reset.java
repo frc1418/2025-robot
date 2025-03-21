@@ -16,6 +16,9 @@ public class Reset extends SequentialCommandGroup {
     addCommands(
       ledSubsystem.dontMoveColor(),
       Commands.deadline(
+        Commands.waitSeconds(0.01),
+        elevatorSubsystem.smoothControl(0.125)),
+      Commands.deadline(
           Commands.waitUntil(pivotSubsystem::isSafe), 
           pivotSubsystem.setPivot(69),
           elevatorSubsystem.smoothControl(0.125)),
