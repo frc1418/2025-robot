@@ -59,7 +59,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public Command intakeIn() {
     return new RunCommand(
       () -> {
-        setIntake(0.2);
+        setIntake(0.4);
       }, this);
   }
 

@@ -27,12 +27,11 @@ public class PivotSubsystem extends SubsystemBase {
   private final NetworkTable table = ntInstance.getTable("/components/pivot");
   private final NetworkTableEntry ntPivotAmount = table.getEntry("pivotAmountDegrees");
 
-  private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(6);
+  private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(7);
 
   private double lastPivot;
   private double initialPivot = PivotConstants.PIVOT_OFFSET;
   private double pivotValue;
-  private double encoderScalar = PivotConstants.ENCODER_SCALAR;
   private double kG = PivotConstants.kG;
 
   private IntakeSubsystem intakeSubsystem;
@@ -74,8 +73,13 @@ public class PivotSubsystem extends SubsystemBase {
     }
   }
 
-  public void resetPivot() {
+  public void resetPivotController() {
     pivotController.reset();
+  }
+
+  public void zero() {
+    lastPivot = pivotEncoder.get() - 1;
+    initialPivot = (lastPivot / PivotConstants.ENCODER_SCALAR) - (90.0 / 360.0);
   }
 
   public void updatePivot() {
@@ -88,7 +92,7 @@ public class PivotSubsystem extends SubsystemBase {
       deltaPivot -= 1;
     }
     lastPivot += deltaPivot;
-    double normalizedPivot = lastPivot/encoderScalar;
+    double normalizedPivot = lastPivot/PivotConstants.ENCODER_SCALAR;
     pivotValue = normalizedPivot - initialPivot;
     ntPivotAmount.setDouble(pivotValue*360);
   }
@@ -140,6 +144,13 @@ public class PivotSubsystem extends SubsystemBase {
     return Commands.runOnce(
       () -> {
         pivotController.reset();
+      }, this);
+  }
+
+  public Command zeroPivot() {
+    return Commands.runOnce(
+      () -> {
+        zero();
       }, this);
   }
 

@@ -44,7 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double zeroCounter= 0;
 
   private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
-  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(0.85);
+  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(ElevatorConstants.maxAccel);
 
   private double heightValue;
   private double kG = ElevatorConstants.kG;
@@ -93,7 +93,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public Boolean isTop() {
-    return heightValue > 1.02;
+    return heightValue > 0.99;
   }
 
   public Boolean isMiddle() {
@@ -101,7 +101,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public Boolean isKindaLow() {
-    return heightValue < 0.24;
+    //TODO: Raise value to speed up elevator dropping
+    return heightValue < 0.26;
+  }
+
+  public Boolean isKindaLowAuto() {
+    return heightValue < 0.33;
   }
 
   public Boolean isLow() {
@@ -151,7 +156,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void zero() {
-    // initialHeight = (elevatorEncoder.getPosition()+ElevatorConstants.ELEVATOR_OFFSET)/encoderScalar;
     encoder.setPosition(0);
   }
 

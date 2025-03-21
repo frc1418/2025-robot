@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.772,
-        "y": 2.787
+        "x": 3.904,
+        "y": 2.71
       },
       "prevControl": {
-        "x": 2.7574055853852135,
-        "y": 2.146126079838022
+        "x": 2.8894055853852136,
+        "y": 2.069126079838022
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,13 +32,13 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8849667774086378,
+      "minWaypointRelativePos": 0.8000545058139535,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.85,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
+        "maxVelocity": 0.8,
+        "maxAcceleration": 11.0,
+        "maxAngularVelocity": 800.0,
+        "maxAngularAcceleration": 1000.0,
         "nominalVoltage": 12.0,
         "unlimited": false
       }
@@ -47,8 +47,8 @@
   "pointTowardsZones": [
     {
       "fieldPosition": {
-        "x": 4.2,
-        "y": 3.5
+        "x": 4.0,
+        "y": 3.6
       },
       "rotationOffset": 0.0,
       "minWaypointRelativePos": 0.03411804401993353,
@@ -67,10 +67,21 @@
           "name": "reset"
         }
       }
+    },
+    {
+      "name": "startL4",
+      "waypointRelativePos": 0.616577553986711,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "startL4"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
+    "maxVelocity": 2.0,
     "maxAcceleration": 11.0,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 1000.0,

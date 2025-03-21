@@ -19,16 +19,16 @@ public class DeliverL2 extends SequentialCommandGroup {
       Commands.deadline(
         Commands.waitSeconds(1), 
         pivotSubsystem.setPivot(65),
-        elevatorSubsystem.moveElevatorToHeight(0.3)),
+        elevatorSubsystem.moveElevatorToHeight(0.42)),
       Commands.deadline(
         Commands.waitSeconds(1),
         pivotSubsystem.setPivot(-50),
-        elevatorSubsystem.moveElevatorToHeight(0.3)),
+        elevatorSubsystem.moveElevatorToHeight(0.42)),
       ledSubsystem.allianceColor(),
       Commands.deadline(
       Commands.waitUntil(robot::isAutonomous),
       pivotSubsystem.setPivot(-50),
-      elevatorSubsystem.moveElevatorToHeight(0.3)) 
+      elevatorSubsystem.moveElevatorToHeight(0.42)) 
     );
   }
 }

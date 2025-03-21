@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriverConstants;
 import frc.robot.common.FieldSpaceOdometry;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LedSubsystem;
@@ -24,7 +23,6 @@ public class AlignByFieldPose extends Command {
   double rotOffset;
   double deltaSide = 0;
   double deltaBack = 0;
-  double deltaArm = 0;
 
   double kV;
   double initialSpeedP;
@@ -34,12 +32,11 @@ public class AlignByFieldPose extends Command {
 
   boolean startedFieldCentric;
   boolean hasTargetPos = false;
-  boolean isLeft;
 
   PIDController speedController;
   PIDController speedRotController;
   
-  public AlignByFieldPose(DriveSubsystem swerveDrive, LedSubsystem leds, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel, Boolean isLeft) {
+  public AlignByFieldPose(DriveSubsystem swerveDrive, LedSubsystem leds, double sideOffset, double backOffset, double rotOffset, double P, double I, double D, double kV, double maxAccel) {
     DataLogManager.start();  
     this.swerveDrive = swerveDrive;
     this.leds = leds;
@@ -49,7 +46,6 @@ public class AlignByFieldPose extends Command {
     this.backOffset = backOffset;
     this.rotOffset = rotOffset;
     this.kV = kV;
-    this.isLeft = isLeft;
     
     speedController = new PIDController(P, I, D);
     speedController.setTolerance(0.006);
@@ -65,7 +61,6 @@ public class AlignByFieldPose extends Command {
   public void initialize() {
     System.out.println("Delta Side: " + deltaSide);
     System.out.println("Delta Back: " + deltaBack);
-    System.out.println("Delta Arm Offset: " + deltaArm);
       this.startedFieldCentric = swerveDrive.getFieldCentric();
       this.swerveDrive.setFieldCentric(false);
       this.aligningTag = odometry.getAprilTagNumber();
@@ -73,11 +68,7 @@ public class AlignByFieldPose extends Command {
       if (odometry.getClosestAprilTagPose().isPresent()) {
         try {
           double newBackOffset = backOffset + deltaBack;
-          double newSideOffset = sideOffset + deltaSide;        
-          if (isLeft) {
-            newSideOffset *= -1;
-            newSideOffset -= (DriverConstants.armOffset+deltaArm);
-          }
+          double newSideOffset = sideOffset + deltaSide;     
   
           double tagRotation = odometry.getClosestAprilTagPose().get().getRotation().toRotation2d().getDegrees();
   
@@ -101,15 +92,10 @@ public class AlignByFieldPose extends Command {
     if (!hasTargetPos) {
       System.out.println("Delta Side: " + deltaSide);
       System.out.println("Delta Back: " + deltaBack);
-      System.out.println("Delta Arm Offset: " + deltaArm);
       if (odometry.getClosestAprilTagPose().isPresent()) {
         try {
           double newBackOffset = backOffset + deltaBack;
           double newSideOffset = sideOffset + deltaSide;        
-          if (isLeft) {
-            newSideOffset *= -1;
-            newSideOffset -= (DriverConstants.armOffset+deltaArm);
-          }
   
           double tagRotation = odometry.getClosestAprilTagPose().get().getRotation().toRotation2d().getDegrees();
   
@@ -197,12 +183,6 @@ public class AlignByFieldPose extends Command {
     deltaSide += delta;
     hasTargetPos = false;
     DataLogManager.log(alignmentType + " sideOffset:  " + deltaSide);
-  }
-
-  public void adjustArmOffset(double delta, String aligmentType) {
-    deltaArm += delta;
-    hasTargetPos = false;
-    DataLogManager.log(aligmentType + " armOffset:  " + deltaArm);
   }
 
   // Returns true when the command should end.
