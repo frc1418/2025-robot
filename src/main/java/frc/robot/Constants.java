@@ -86,9 +86,9 @@ public final class Constants {
 
   public final static class PivotConstants {
     public static final int TALON_MOTOR_ID = 1;
-    public final static double ENCODER_SCALAR = 0.951134993;
+    public final static double ENCODER_SCALAR = 0.98283949;
 
-    public static final double PIVOT_OFFSET = 0.152221109; //36 degrees up 22.2 percent elevator to intake
+    public static final double PIVOT_OFFSET = 0.149443331; //36 degrees up 22.2 percent elevator to intake
     // kG plus kConstant must be no more than 0.04 to keep falcon happy
     public final static double maxSpeed = 0.175;
     public static final double pivotTolerance = 0.5;

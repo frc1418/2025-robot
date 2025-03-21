@@ -32,7 +32,6 @@ public class PivotSubsystem extends SubsystemBase {
   private double lastPivot;
   private double initialPivot = PivotConstants.PIVOT_OFFSET;
   private double pivotValue;
-  private double encoderScalar = PivotConstants.ENCODER_SCALAR;
   private double kG = PivotConstants.kG;
 
   private IntakeSubsystem intakeSubsystem;
@@ -80,7 +79,7 @@ public class PivotSubsystem extends SubsystemBase {
 
   public void zero() {
     lastPivot = pivotEncoder.get() - 1;
-    initialPivot = (lastPivot / encoderScalar) - (90.0 / 360.0);
+    initialPivot = (lastPivot / PivotConstants.ENCODER_SCALAR) - (90.0 / 360.0);
   }
 
   public void updatePivot() {
@@ -93,7 +92,7 @@ public class PivotSubsystem extends SubsystemBase {
       deltaPivot -= 1;
     }
     lastPivot += deltaPivot;
-    double normalizedPivot = lastPivot/encoderScalar;
+    double normalizedPivot = lastPivot/PivotConstants.ENCODER_SCALAR;
     pivotValue = normalizedPivot - initialPivot;
     ntPivotAmount.setDouble(pivotValue*360);
   }
