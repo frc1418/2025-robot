@@ -175,7 +175,7 @@ public class RobotContainer {
       Commands.none()));
     altJoystick.button(1).onTrue(Commands.runOnce(() -> {
       if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
-        adjustBackAlignment(0.01);
+        adjustBackAlignment(0.005);
       }
     }));
     altJoystick.button(2).whileTrue(checkMode(
@@ -184,7 +184,7 @@ public class RobotContainer {
       Commands.none()));
     altJoystick.button(2).onTrue(Commands.runOnce(() -> {
       if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
-        adjustSideOffset(0.01);
+        adjustSideOffset(0.005);
       }
     }));
     altJoystick.button(2).onFalse(ledSubsystem.allianceColor());
@@ -194,7 +194,7 @@ public class RobotContainer {
       Commands.none()));
     altJoystick.button(3).onTrue(Commands.runOnce(() -> {
       if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
-        adjustSideOffset(-0.01);
+        adjustSideOffset(-0.005);
       }
     }));
     altJoystick.button(3).onFalse(ledSubsystem.allianceColor());
@@ -205,7 +205,7 @@ public class RobotContainer {
     altJoystick.button(4).onFalse(ledSubsystem.allianceColor());
     altJoystick.button(4).onTrue(Commands.runOnce(() -> {
       if (ControllerMode.ADJUSTMENT.equals(controllerMode)) {
-        adjustBackAlignment(-0.01);
+        adjustBackAlignment(-0.005);
       }
     }));
     altJoystick.button(5).whileTrue(checkMode(
