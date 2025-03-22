@@ -67,8 +67,8 @@ public class RobotContainer {
   CommandJoystick rightJoystick = new CommandJoystick(1);
   CommandJoystick altJoystick = new CommandJoystick(2);
 
-  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, -0.22, 0.56, 0, 0.5, 0, 0.1, 0, 3);
-  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.56 , 0, 0.5, 0, 0.1, 0, 3);
+  private final AlignByFieldPose alignByReefLeft = new AlignByFieldPose(driveSubsystem, ledSubsystem, -0.22, 0.55, 0, 0.5, 0, 0.1, 0, 3);
+  private final AlignByFieldPose alignByReefRight = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0.11, 0.55 , 0, 0.5, 0, 0.1, 0, 3);
   private final AlignByFieldPose alignByIntake = new AlignByFieldPose(driveSubsystem, ledSubsystem, 0, 0.665, 0, 0.5, 0, 0.1, 0, 3);
   private final AlignRot alignRotBackward = new AlignRot(this, driveSubsystem, leftJoystick, 180);
   private final AlignRot alignRotForward = new AlignRot(this, driveSubsystem, leftJoystick, 0);
