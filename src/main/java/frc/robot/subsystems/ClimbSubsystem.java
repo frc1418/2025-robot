@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -90,7 +91,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    ph.enableCompressorAnalog(100,120);
+    if (DriverStation.isTeleopEnabled()) {
+      ph.enableCompressorAnalog(100,120);
+    }
+    else {
+      ph.enableCompressorAnalog(0,1);
+    }
     ntClimbPistons.setBoolean(climbPistonsOut);
     ntAttachPistons.setBoolean(!attachPistonsOut);
     ntPressure.setDouble(ph.getPressure(0));
