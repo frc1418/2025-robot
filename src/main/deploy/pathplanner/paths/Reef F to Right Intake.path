@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.342,
-        "y": 2.865
+        "x": 5.355,
+        "y": 2.843
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.371592616461328,
-        "y": 2.6167576243850124
+        "x": 5.384592616461329,
+        "y": 2.594757624385012
       },
       "isLocked": false,
       "linkedName": "Reef F"
@@ -64,10 +64,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 2.3255684177740865,
+      "minWaypointRelativePos": 2.321169019933555,
       "maxWaypointRelativePos": 2.95,
       "constraints": {
-        "maxVelocity": 0.9,
+        "maxVelocity": 0.8,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -83,7 +83,7 @@
         "y": 0.5
       },
       "rotationOffset": 0.0,
-      "minWaypointRelativePos": 1.767078488372093,
+      "minWaypointRelativePos": 1.368718853820598,
       "maxWaypointRelativePos": 2.4,
       "name": "Point Towards Zone"
     }
