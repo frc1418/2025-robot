@@ -47,7 +47,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbSubsystem() {
     climbSolenoid.set(DoubleSolenoid.Value.kReverse);
-    attachSolenoid.set(DoubleSolenoid.Value.kForward);
+    attachSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
   public Boolean isClimbing() {
