@@ -23,8 +23,10 @@ public class ClimbSubsystem extends SubsystemBase {
   private final NetworkTableEntry ntClimbPistons = table.getEntry("footExtended");
   private final NetworkTableEntry ntAttachPistons = table.getEntry("handsExtended");
   private final NetworkTableEntry ntPressure = table.getEntry("pressure");
+  private final NetworkTableEntry ntTime = table.getEntry("time");
 
 
+  private double time = 0;
   PneumaticHub ph = new PneumaticHub(PneumaticsConstants.PNEUMATICS_HUB_ID);
 
 
@@ -45,7 +47,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public ClimbSubsystem() {
     climbSolenoid.set(DoubleSolenoid.Value.kReverse);
-    attachSolenoid.set(DoubleSolenoid.Value.kForward);
+    attachSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
   public Boolean isClimbing() {
@@ -92,14 +94,21 @@ public class ClimbSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (DriverStation.isTeleopEnabled()) {
+      time += 0.02;
+      if (time > 90) {
+        ph.enableCompressorAnalog(100,120);
+      }
+    }
+    else if (DriverStation.isTest()){
       ph.enableCompressorAnalog(100,120);
     }
     else {
-      ph.enableCompressorAnalog(0,1);
+      ph.enableCompressorAnalog(0, 1);
     }
     ntClimbPistons.setBoolean(climbPistonsOut);
     ntAttachPistons.setBoolean(!attachPistonsOut);
     ntPressure.setDouble(ph.getPressure(0));
+    ntTime.setDouble(time);
   }
 
   @Override
