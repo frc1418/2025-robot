@@ -24,7 +24,11 @@ public class LedSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        blinkin.set(color.color());
+        try {
+          blinkin.set(color.color());
+        } catch (Exception e) {
+          System.out.println("Error: " + e.getStackTrace());
+        }
     }
 
     public void setAllianceColor() {
