@@ -73,7 +73,7 @@ public final class Constants {
     public final static double maxSpeed = 0.9;
     public final static double maxAccel = 1.5;
     public final static double kV = 0.13;
-    public final static double kG = 0.17;
+    public final static double kG = 0.19;
     public final static double kCoral = 0.025;
 
     public final static double kP = 0.8;
