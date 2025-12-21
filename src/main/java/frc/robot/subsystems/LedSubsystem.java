@@ -14,71 +14,64 @@ import frc.robot.Constants.LedColor;
 
 public class LedSubsystem extends SubsystemBase {
 
-    public LedColor color;
-    private Boolean hasPriority = false;
-    private Spark blinkin = new Spark(0);
+  public LedColor color;
+  private boolean hasPriority = false;
+  private Spark blinkin = new Spark(0);
 
-    public LedSubsystem() {        
-      setAllianceColor();
+  @Override
+  public void periodic() {
+    try {
+      blinkin.set(color.color());
+    } catch (Exception e) {
+      System.out.println("Error: " + e.getStackTrace());
     }
+  }
 
-    @Override
-    public void periodic() {
-        try {
-          blinkin.set(color.color());
-        } catch (Exception e) {
-          System.out.println("Error: " + e.getStackTrace());
-        }
-    }
-
-    public void setAllianceColor() {
+  public void setAllianceColor() {
     if (DriverStation.getAlliance().isPresent()) {
-      if (DriverStation.getAlliance().get() == Alliance.Blue)
+      if (DriverStation.getAlliance().get() == Alliance.Blue) {
         color = LedColor.BLUE_ALLIANCE;
-      else
+      } else {
         color = LedColor.RED_ALLIANCE;
       }
-      hasPriority = false;
     }
+    hasPriority = false;
+  }
 
-    public void setAligningColor() {
-        color = LedColor.ALIGNING;
-        hasPriority = true;
-    }
+  public void setAligningColor() {
+    color = LedColor.ALIGNING;
+    hasPriority = true;
+  }
 
-    public void setAlignedColor() {
-        color = LedColor.ALIGNED;
-        hasPriority = true;
-    }
+  public void setAlignedColor() {
+    color = LedColor.ALIGNED;
+    hasPriority = true;
+  }
 
-    public void setDontMoveColor() {
-        color = LedColor.DONT_MOVE;
-        hasPriority = true;
-    }
+  public void setDontMoveColor() {
+    color = LedColor.DONT_MOVE;
+    hasPriority = true;
+  }
 
-    public void setCoralInColor() {
-      if (!hasPriority) {
-        color = LedColor.CORAL_IN;
-      }
+  public void setCoralInColor() {
+    if (!hasPriority) {
+      color = LedColor.CORAL_IN;
     }
+  }
 
-    public void resetColor() {
-        if (!hasPriority) {
-            setAllianceColor();
-        }
+  public void resetColor() {
+    if (!hasPriority) {
+      setAllianceColor();
     }
+  }
 
-    public Command dontMoveColor() {
-      return Commands.runOnce(
-        () -> {
-          setDontMoveColor();
-        });
-    }
+  public Command dontMoveColor() {
+    return Commands.runOnce(
+        this::setDontMoveColor);
+  }
 
-    public Command allianceColor() {
-      return Commands.runOnce(
-        () -> {
-          setAllianceColor();
-        });
-    }
+  public Command allianceColor() {
+    return Commands.runOnce(
+        this::setAllianceColor);
+  }
 }

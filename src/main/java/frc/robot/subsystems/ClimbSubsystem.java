@@ -8,12 +8,17 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.PneumaticsConstants;;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.Constants.PneumaticsConstants;
+
+;
 
 public class ClimbSubsystem extends SubsystemBase {
 
@@ -23,92 +28,72 @@ public class ClimbSubsystem extends SubsystemBase {
   private final NetworkTableEntry ntClimbPistons = table.getEntry("footExtended");
   private final NetworkTableEntry ntAttachPistons = table.getEntry("handsExtended");
   private final NetworkTableEntry ntPressure = table.getEntry("pressure");
-  private final NetworkTableEntry ntTime = table.getEntry("time");
 
 
-  private double time = 0;
   PneumaticHub ph = new PneumaticHub(PneumaticsConstants.PNEUMATICS_HUB_ID);
 
 
-  private DoubleSolenoid climbSolenoid = new DoubleSolenoid(
-    PneumaticsConstants.PNEUMATICS_HUB_ID, 
-    PneumaticsModuleType.REVPH, 
-    PneumaticsConstants.CLIMB_SOLENOID_FORWARD, 
-    PneumaticsConstants.CLIMB_SOLENOID_REVERSE);
+  private final DoubleSolenoid climbSolenoid = new DoubleSolenoid(
+      PneumaticsConstants.PNEUMATICS_HUB_ID,
+      PneumaticsModuleType.REVPH,
+      PneumaticsConstants.CLIMB_SOLENOID_FORWARD,
+      PneumaticsConstants.CLIMB_SOLENOID_REVERSE);
 
-  private DoubleSolenoid attachSolenoid = new DoubleSolenoid(
-    PneumaticsConstants.PNEUMATICS_HUB_ID, 
-    PneumaticsModuleType.REVPH, 
-    PneumaticsConstants.ATTACH_SOLENOID_FORWARD,
-    PneumaticsConstants.ATTACH_SOLENOID_REVERSE);
-
-  private Boolean climbPistonsOut = false;
-  private Boolean attachPistonsOut = true;
+  private final DoubleSolenoid attachSolenoid = new DoubleSolenoid(
+      PneumaticsConstants.PNEUMATICS_HUB_ID,
+      PneumaticsModuleType.REVPH,
+      PneumaticsConstants.ATTACH_SOLENOID_FORWARD,
+      PneumaticsConstants.ATTACH_SOLENOID_REVERSE);
 
   public ClimbSubsystem() {
     climbSolenoid.set(DoubleSolenoid.Value.kReverse);
     attachSolenoid.set(DoubleSolenoid.Value.kReverse);
+
+    // Disable compressor until the end of the match
+    ph.disableCompressor();
+    RobotModeTriggers.teleop().and(() -> DriverStation.getMatchTime() > 90).or(
+        RobotModeTriggers.test()).onTrue(
+        Commands.runOnce(() -> ph.enableCompressorAnalog(100, 120))
+    );
+
   }
 
-  public Boolean isClimbing() {
-    return climbPistonsOut;
+  public boolean isClimbing() {
+    return climbSolenoid.get() == Value.kForward;
   }
 
-  public void climbToggle(){
-    if (!attachPistonsOut) {
+  public void climbToggle() {
+    if (attachSolenoid.get() == Value.kForward) {
       climbSolenoid.toggle();
-      climbPistonsOut = !climbPistonsOut;
     }
   }
 
-  public void climbExtend(){
+  public void climbExtend() {
     climbSolenoid.set(DoubleSolenoid.Value.kForward);
-    climbPistonsOut = true;
   }
 
-  public void climbRetract(){
+  public void climbRetract() {
     climbSolenoid.set(DoubleSolenoid.Value.kReverse);
-    climbPistonsOut = false;
   }
 
   public void attachToggle() {
     attachSolenoid.toggle();
-    attachPistonsOut = !attachPistonsOut;
   }
 
   public Command toggleClimb() {
-    return runOnce(
-      () -> {
-        climbToggle();
-      });
+    return runOnce(this::climbToggle);
   }
 
   public Command toggleAttach() {
-    return runOnce(
-      () -> {
-        attachToggle();
-      });
+    return runOnce(this::attachToggle);
   }
 
 
   @Override
   public void periodic() {
-    if (DriverStation.isTeleopEnabled()) {
-      time += 0.02;
-      if (time > 90) {
-        ph.enableCompressorAnalog(100,120);
-      }
-    }
-    else if (DriverStation.isTest()){
-      ph.enableCompressorAnalog(100,120);
-    }
-    else {
-      ph.enableCompressorAnalog(0, 1);
-    }
-    ntClimbPistons.setBoolean(climbPistonsOut);
-    ntAttachPistons.setBoolean(!attachPistonsOut);
+    ntClimbPistons.setBoolean(climbSolenoid.get() == Value.kForward);
+    ntAttachPistons.setBoolean(attachSolenoid.get() == Value.kForward);
     ntPressure.setDouble(ph.getPressure(0));
-    ntTime.setDouble(time);
   }
 
   @Override
