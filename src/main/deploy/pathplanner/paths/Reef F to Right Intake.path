@@ -8,43 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.340592616461328,
-        "y": 2.5687576243850123
+        "x": 4.053947368418623,
+        "y": 1.618289473684572
       },
       "isLocked": false,
       "linkedName": "Reef F"
-    },
-    {
-      "anchor": {
-        "x": 4.901711164202009,
-        "y": 2.176267787388392
-      },
-      "prevControl": {
-        "x": 5.139979959059817,
-        "y": 2.251951216202156
-      },
-      "nextControl": {
-        "x": 4.278326024342694,
-        "y": 1.9782564410672898
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.2518079485212055,
-        "y": 2.3753518240792415
-      },
-      "prevControl": {
-        "x": 3.6638557966618133,
-        "y": 2.5997553835507277
-      },
-      "nextControl": {
-        "x": 1.2862086716138845,
-        "y": 1.3048754795891102
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -52,8 +20,8 @@
         "y": 1.224
       },
       "prevControl": {
-        "x": 1.6003920717592581,
-        "y": 1.380687572337962
+        "x": 1.94999999999757,
+        "y": 2.182763157895098
       },
       "nextControl": null,
       "isLocked": false,
@@ -64,8 +32,8 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 2.321169019933555,
-      "maxWaypointRelativePos": 2.95,
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.8,
         "maxAcceleration": 3.0,
@@ -76,18 +44,7 @@
       }
     }
   ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 0.8,
-        "y": 0.5
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 1.368718853820598,
-      "maxWaypointRelativePos": 2.4,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "resetL4",
@@ -102,7 +59,7 @@
     },
     {
       "name": "intake",
-      "waypointRelativePos": 2.0691185631229225,
+      "waypointRelativePos": 0.55,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -113,8 +70,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 11.0,
+    "maxVelocity": 4.45,
+    "maxAcceleration": 6.7,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 1000.0,
     "nominalVoltage": 12.0,

@@ -4,28 +4,32 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
+
   private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
   private final NetworkTable table = ntInstance.getTable("/components/elevator");
 
@@ -33,157 +37,82 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final NetworkTableEntry ntElevatorSpeed = table.getEntry("elevatorSpeed");
   private final NetworkTableEntry ntElevatorAtBottom = table.getEntry("elevatorAtBottom");
 
-  private final SparkMax motor1 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
-  private final SparkMax motor2 = new SparkMax(ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
+  private final SparkMax motor1 = new SparkMax(
+      ElevatorConstants.ELEVATOR_MOTOR_1_ID, MotorType.kBrushless);
+  private final SparkClosedLoopController motor1Controller = motor1.getClosedLoopController();
+  private final SparkMax motor2 = new SparkMax(
+      ElevatorConstants.ELEVATOR_MOTOR_2_ID, MotorType.kBrushless);
+
   private final SparkMaxConfig motorConfig = new SparkMaxConfig();
-  private final AbsoluteEncoder elevatorEncoder;
   private final RelativeEncoder encoder = motor1.getEncoder();
-  private IntakeSubsystem intakeSubsystem;
 
   private DigitalInput zeroSwitch = new DigitalInput(9);
-  private double zeroCounter= 0;
 
-  private final PIDController elevatorController = new PIDController(ElevatorConstants.kP, 0, ElevatorConstants.kD);
-  private final SlewRateLimiter speedLimiter = new SlewRateLimiter(ElevatorConstants.maxAccel);
+  // TODO get kS and kA values
+  private final ElevatorFeedforward feedforward = new ElevatorFeedforward(
+      0.0, ElevatorConstants.kG, ElevatorConstants.kV, 0.0);
+  private final TrapezoidProfile profile = new TrapezoidProfile(
+      new Constraints(ElevatorConstants.maxSpeed, ElevatorConstants.maxAccel));
 
   private double heightValue;
-  private double kG = ElevatorConstants.kG;
 
-  public ElevatorSubsystem(IntakeSubsystem intakeSubsystem) {
+  public ElevatorSubsystem() {
     motorConfig.idleMode(IdleMode.kBrake);
-    motorConfig.encoder.positionConversionFactor(1.0/6.0);
+    motorConfig.closedLoop.pid(ElevatorConstants.kP, 0.0, ElevatorConstants.kD);
+    motorConfig.encoder.positionConversionFactor(1.0 / 6.0);
     motor1.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    motorConfig.follow(motor1);
     motor2.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    elevatorEncoder = motor1.getAbsoluteEncoder();
-    this.intakeSubsystem = intakeSubsystem;
+
+    new Trigger(zeroSwitch::get).onTrue(
+        Commands.runOnce(() -> encoder.setPosition(0.0)).ignoringDisable(true));
   }
 
-  public Command holdElevator() {
-    return new RunCommand(
-      () -> {
-        if (heightValue > 0.03) {
-          moveElevator(kG);
-        }
-        else {
-          moveElevator(0);
-        }
-      }, this);
-  }
-
-  public Command runElevator(double speed) {
-    return new RunCommand(
-      () -> {
-        moveElevator(speed+kG);
-      }, this);
-  }
+  private TrapezoidProfile.State setpoint = new State();
 
   public Command moveElevatorToHeight(double height) {
-    return new RunCommand(
-      () -> {
-        setElevatorLocation(height);
-      }, this);
+    return run(() -> {
+      setpoint = profile.calculate(0.20, setpoint, new State(height, 0));
+      motor1Controller.setReference(
+          setpoint.position, ControlType.kPosition, ClosedLoopSlot.kSlot0,
+          feedforward.calculate(setpoint.velocity));
+    });
   }
 
   public double getHeight() {
-    return heightValue;
+    return encoder.getPosition() / 4.52;
   }
 
-  public Boolean isSafeL3() {
-    return heightValue < 0.6;
+  public boolean isSafeL3() {
+    return getHeight() < 0.6;
   }
 
-  public Boolean isTop() {
-    return heightValue > 0.99;
+  public boolean isTop() {
+    return getHeight() > 0.99;
   }
 
-  public Boolean isMiddle() {
-    return heightValue < 0.57;
+  public boolean isMiddle() {
+    return getHeight() < 0.57;
   }
 
-  public Boolean isKindaLow() {
+  public boolean isKindaLow() {
     //TODO: Raise value to speed up elevator dropping
-    return heightValue < 0.26;
+    return getHeight() < 0.26;
   }
 
-  public Boolean isKindaLowAuto() {
-    return heightValue < 0.33;
+  public boolean isKindaLowAuto() {
+    return getHeight() < 0.33;
   }
 
-  public Boolean isLow() {
-    return heightValue < 0.05;
-  }
-
-  public void moveElevator(double speed) {
-    speed = speedLimiter.calculate(speed);
-    motor1.set(speed);
-    motor2.set(speed);
-  }
-
-  public void setElevatorLocation(double height) {
-    double error = height - heightValue;
-    double speed;
-    if (Math.abs(error) < 0.0025) {
-      speed = kG;
-    }
-    else {
-      speed = elevatorController.calculate(heightValue, height)+ElevatorConstants.kV*Math.signum(error)+kG;
-    }
-    if (Math.abs(speed) > ElevatorConstants.maxSpeed) {
-      speed = Math.signum(speed)*ElevatorConstants.maxSpeed;
-    }
-    moveElevator(speed);
-  }
-
-  public void updateElevator() {
-    heightValue = (encoder.getPosition()/4.52);
-    ntElevatorHeight.setDouble(heightValue);
-    ntElevatorSpeed.setDouble(elevatorEncoder.getVelocity());
-  }
-
-  public void updateFF() {
-    if (intakeSubsystem.getHasCoral()) {
-      kG = ElevatorConstants.kG+ElevatorConstants.kCoral;
-    }
-    else {
-      kG = ElevatorConstants.kG;
-    }
-  }
-
-  public Command reZero() {
-    return Commands.runOnce(() -> {
-      zero();
-    });
-  }
-
-  public void zero() {
-    encoder.setPosition(0);
-  }
-
-  public Command smoothControl(double smoothValue) {
-    return new RunCommand(() -> {
-      speedLimiter.reset(smoothValue);
-    });
+  public boolean isLow() {
+    return getHeight() < 0.05;
   }
 
   @Override
   public void periodic() {
-    updateElevator();
-    updateFF();
+    ntElevatorHeight.setDouble(getHeight());
+    ntElevatorSpeed.setDouble(encoder.getVelocity());
     ntElevatorAtBottom.setBoolean(zeroSwitch.get());
-    if (zeroSwitch.get()) {
-      zeroCounter++;
-      if (zeroCounter > 10) {
-        zero();
-        zeroCounter = 0;
-      }
-    }
-    else {
-      zeroCounter = 0;
-    }
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
 }

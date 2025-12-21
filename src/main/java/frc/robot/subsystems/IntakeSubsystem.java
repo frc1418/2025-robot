@@ -4,31 +4,32 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
+
   private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
   private final NetworkTable table = ntInstance.getTable("/components/intake");
 
   private final NetworkTableEntry ntHasCoral = table.getEntry("hasCoral");
 
-  private final LedSubsystem leds;
-
-  private final SparkFlex intakeMotor = new SparkFlex(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
+  private final SparkFlex intakeMotor = new SparkFlex(
+      IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
   private final SparkFlexConfig motorConfig = new SparkFlexConfig();
 
   private DigitalInput coralSwitch = new DigitalInput(8);
@@ -38,50 +39,42 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem(LedSubsystem leds) {
     motorConfig.idleMode(IdleMode.kBrake);
-    intakeMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    this.leds = leds;
+    intakeMotor.configure(
+        motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    new Trigger(coralSwitch::get).onTrue(
+        Commands.runOnce(leds::setCoralInColor).ignoringDisable(true)).onFalse(
+        Commands.runOnce(leds::resetColor).ignoringDisable(true));
   }
 
   public Command holdIntake() {
-    return new RunCommand(
-      () -> {
-        setIntake(0.05);
-      }, this);
+    return run(() -> {
+      intakeMotor.getClosedLoopController().setReference(20, ControlType.kCurrent);
+    });
   }
 
   public Command intakeOut() {
-    return new RunCommand(
-      () -> {
-        setIntake(-0.15);
-      }, this);
+    return run(() -> {
+      intakeMotor.set(-0.15);
+    });
   }
 
+  /* TODO test out current control for holding gamepieces. Because current is directly proprtional to torque,
+  this is effectively controlling the hold power. You can even use the same control for intaking and holding
+  */
   public Command intakeIn() {
-    return new RunCommand(
-      () -> {
-        setIntake(0.4);
-      }, this);
+    return run(() -> {
+      intakeMotor.getClosedLoopController().setReference(20, ControlType.kCurrent);
+    });
   }
 
-  public void setIntake(double speed) {
-    intakeMotor.set(speed);
-  }
-
-  public Boolean getHasCoral() {
-    return hasCoral;
+  public boolean getHasCoral() {
+    return coralSwitch.get();
   }
 
 
   @Override
   public void periodic() {
-    if (coralSwitch.get()) {
-      hasCoral = true;
-      leds.setCoralInColor();
-    }
-    else {
-      hasCoral = false;
-      leds.resetColor();
-    }
     ntHasCoral.setBoolean(hasCoral);
   }
 
